@@ -33,14 +33,13 @@ function parseRecord01(string $line): array
 {
     $line = trim($line);
 
-    preg_match('/#BPA#(\d{6})/', $line, $mCompetencia);
-    preg_match('/#BPA#\d{6}(\d{7})/', $line, $mCnes);
-
     return [
         'raw' => $line,
         'tipo' => '01',
-        'competencia' => $mCompetencia[1] ?? null,
-        'cnes' => $mCnes[1] ?? null,
+        'competencia' => substr($line, 2, 6),
+        'cnes' => substr($line, 8, 7),
+        'versao_bpa' => substr($line, 15, 2),
+        'origem' => substr($line, 17, 3),
     ];
 }
 
@@ -95,15 +94,10 @@ function parseRecord03(string $line): array
     $folhaBpa = substr($line, 44, 3);
     $sequencia = substr($line, 47, 2);
 
-    // Correção importante:
-    // no layout real o procedimento ocupa 10 posições a partir daqui
+    $quantidade = substr($line, 49, 1);
     $procedimento = substr($line, 50, 10);
-
-    // quantidade é 1 posição anterior ao procedimento em alguns arquivos,
-    // mas nos exemplos enviados ela deve ser interpretada como 1
-    $quantidade = '1';
-
     $cnsPacienteRaw = substr($line, 60, 15);
+
     $sexoCodigo = substr($line, 75, 1);
     $municipioCodigo = substr($line, 76, 6);
     $idade = substr($line, 82, 3);
@@ -122,7 +116,6 @@ function parseRecord03(string $line): array
     $bairro = null;
     $complementos = null;
 
-    // Nome precedido de BPA
     if (preg_match(
         '/BPA(?P<nome>[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ ]+?)\s(?P<nascimento>\d{8})\s+(?P<raca>\d{2})\s+(?P<cid2>\d{3})\s+(?P<cep>\d{8})\s+(?P<logradouro_codigo>\d{3})(?P<logradouro_nome>.+?)\s+ZONA\s+(?P<zona>RURAL|URBANA|URBANS|RURALS).*?$/u',
         $resto,
@@ -163,7 +156,6 @@ function parseRecord03(string $line): array
         $complementos = trim($mb[2]);
     }
 
-    // Ajuste do sexo
     if (preg_match('/[MFI]$/', $cnsPacienteRaw, $mx)) {
         $sexoCodigo = $mx[0];
         $cnsPaciente = substr($cnsPacienteRaw, 0, 14);
@@ -171,7 +163,6 @@ function parseRecord03(string $line): array
         $cnsPaciente = $cnsPacienteRaw;
     }
 
-    // Ajuste do município
     if (strlen($municipioCodigo) !== 6 && preg_match('/\d{6}/', $line, $mm)) {
         $municipioCodigo = $mm[0];
     }
@@ -389,7 +380,7 @@ if ($result) {
         <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
                 <h1 class="h3 mb-1">Visualizador BPA</h1>
-                <div class="text-muted">Upload do TXT e leitura dos registros 01, 02 e 03.</div>
+                <div class="text-muted">Upload do TXT e leitura dos registros 01, 02 e 03 com offsets oficiais.</div>
             </div>
             <form method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
                 <input type="file" class="form-control" name="bpa_file" accept=".txt,text/plain" required>
