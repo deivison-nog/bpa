@@ -84,9 +84,11 @@ function parseRecord03(string $line): array
 
     $municipioMap = [
         '150260' => 'Colares',
+        '150290' => 'Muaná',
+        '150820' => 'Viseu',
     ];
 
-    // Campos de início do layout automático (offsets oficiais)
+    // Offsets fixos até o procedimento
     $cnes = substr($line, 2, 7);
     $competencia = substr($line, 9, 6);
     $cnsProfissional = substr($line, 15, 15);
@@ -97,7 +99,7 @@ function parseRecord03(string $line): array
     $quantidade = substr($line, 49, 1);
     $procedimento = substr($line, 50, 10);
 
-    // A partir daqui o BPA-I pode variar; fazemos leitura híbrida.
+    // Bloco livre após o procedimento
     $afterProcedure = substr($line, 60);
 
     $sexoCodigo = null;
@@ -116,7 +118,8 @@ function parseRecord03(string $line): array
     $complementos = null;
     $cnsPaciente = null;
 
-    // Primeiro tenta capturar o bloco textual completo após o marcador BPA.
+    // Estrutura esperada no bloco textual:
+    // BPA + NOME + NASCIMENTO + RAÇA/COR + CID + CEP + LOGRADOURO + ZONA + NÚMERO + BAIRRO + COMPLEMENTOS
     if (preg_match(
         '/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})(?P<raca>\d{2})\s*(?P<cid>\d{3})\s*(?P<cep>\d{8})(?P<logradouro_codigo>\d{3})(?P<logradouro_nome>.+?)\s+ZONA\s+(?P<zona>RURAIS?|URBANS?|URBANA|RURAL|URBANO)(?P<numero>S\/N|\d+)?\s+(?P<bairro>.+?)\s+N$/u',
         $afterProcedure,
@@ -133,7 +136,6 @@ function parseRecord03(string $line): array
         $bairro = trim($m['bairro']);
         $complementos = trim(($m['zona'] ?? '') . ' ' . ($m['numero'] ?? ''));
     } else {
-        // Fallbacks mais tolerantes para evitar quebra da visualização.
         if (preg_match('/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})/u', $afterProcedure, $m2)) {
             $nomePaciente = trim($m2['nome']);
             $dataNascimento = $m2['nascimento'];
@@ -157,29 +159,39 @@ function parseRecord03(string $line): array
         }
     }
 
-    // Sexo / município / idade / CID / caráter de atendimento
-    // Nos registros do BPA-I, após o procedimento, o sexo pode ficar no fim do CNS do paciente
-    // e o município vem logo em seguida.
-    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})\s*(?P<idade>\d{3})\s*(?P<cid>\d{3})\s*(?P<carater>\d{2})\s*BPA/u', $afterProcedure, $mm)) {
+    // Captura sexo/município do trecho inicial e, se não estiver claro, do bloco livre
+    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})/u', $line, $mm)) {
         $cnsPaciente = $mm['cns'];
         $sexoCodigo = $mm['sexo'];
         $municipioCodigo = $mm['muni'];
-        $idade = $mm['idade'];
-        $cid = $cid ?? $mm['cid'];
-        $caraterAtendimento = $mm['carater'];
-    } else {
-        // Fallback mais amplo
-        if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})/u', $afterProcedure, $mm2)) {
-            $cnsPaciente = $mm2['cns'];
-            $sexoCodigo = $mm2['sexo'];
-            $municipioCodigo = $mm2['muni'];
-        }
-
-        if (preg_match('/\b(\d{3})\b/', $afterProcedure, $mi)) {
-            $idade = $mi[1];
-        }
     }
 
+    if ($sexoCodigo === null && preg_match('/[MFI]/', $afterProcedure, $mx)) {
+        $sexoCodigo = $mx[0];
+    }
+
+    if ($municipioCodigo === null && preg_match('/\b(150260|150290|150820)\b/', $line, $mm2)) {
+        $municipioCodigo = $mm2[1];
+    }
+
+    // Idade: tenta pegar o valor logo após o município, ou o primeiro grupo de 3 dígitos plausível
+    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})\s*(?P<idade>\d{3})/u', $line, $mi)) {
+        $idade = $mi['idade'];
+    } elseif (preg_match('/\b(\d{3})\s+010\b/', $afterProcedure, $mi2)) {
+        $idade = $mi2[1];
+    }
+
+    // CID: costuma aparecer depois da data de nascimento, mas em alguns arquivos vem como 010 (usado internamente)
+    if ($cid === null && preg_match('/\b(\d{3})\s+010\b/', $afterProcedure, $mcid)) {
+        $cid = $mcid[1];
+    }
+
+    // Caráter de atendimento: quando houver no texto livre, pode ser o 2º ou 3º bloco numérico
+    if ($caraterAtendimento === null && preg_match('/\b010\s*(\d{2})\b/', $afterProcedure, $mcar)) {
+        $caraterAtendimento = $mcar[1];
+    }
+
+    // Se o CPF/CNS do paciente estiver presente, capturamos do trecho após o procedimento
     if ($cnsPaciente === null && preg_match('/\b([0-9]{14,15})\b/u', $afterProcedure, $mcns)) {
         $cnsPaciente = $mcns[1];
     }
