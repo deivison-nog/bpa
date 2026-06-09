@@ -86,6 +86,7 @@ function parseRecord03(string $line): array
         '150260' => 'Colares',
     ];
 
+    // Campos de início do layout automático (offsets oficiais)
     $cnes = substr($line, 2, 7);
     $competencia = substr($line, 9, 6);
     $cnsProfissional = substr($line, 15, 15);
@@ -93,19 +94,17 @@ function parseRecord03(string $line): array
     $dataAtendimento = substr($line, 36, 8);
     $folhaBpa = substr($line, 44, 3);
     $sequencia = substr($line, 47, 2);
-
     $quantidade = substr($line, 49, 1);
     $procedimento = substr($line, 50, 10);
-    $cnsPacienteRaw = substr($line, 60, 15);
 
-    $sexoCodigo = substr($line, 75, 1);
-    $municipioCodigo = substr($line, 76, 6);
-    $idade = substr($line, 82, 3);
-    $cid = substr($line, 85, 4);
-    $caraterAtendimento = substr($line, 89, 2);
+    // A partir daqui o BPA-I pode variar; fazemos leitura híbrida.
+    $afterProcedure = substr($line, 60);
 
-    $resto = trim(substr($line, 91));
-
+    $sexoCodigo = null;
+    $municipioCodigo = null;
+    $idade = null;
+    $cid = null;
+    $caraterAtendimento = null;
     $nomePaciente = null;
     $dataNascimento = null;
     $racaCodigo = null;
@@ -115,56 +114,74 @@ function parseRecord03(string $line): array
     $logradouroNome = null;
     $bairro = null;
     $complementos = null;
+    $cnsPaciente = null;
 
+    // Primeiro tenta capturar o bloco textual completo após o marcador BPA.
     if (preg_match(
-        '/BPA(?P<nome>[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ ]+?)\s(?P<nascimento>\d{8})\s+(?P<raca>\d{2})\s+(?P<cid2>\d{3})\s+(?P<cep>\d{8})\s+(?P<logradouro_codigo>\d{3})(?P<logradouro_nome>.+?)\s+ZONA\s+(?P<zona>RURAL|URBANA|URBANS|RURALS).*?$/u',
-        $resto,
+        '/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})(?P<raca>\d{2})\s*(?P<cid>\d{3})\s*(?P<cep>\d{8})(?P<logradouro_codigo>\d{3})(?P<logradouro_nome>.+?)\s+ZONA\s+(?P<zona>RURAIS?|URBANS?|URBANA|RURAL|URBANO)(?P<numero>S\/N|\d+)?\s+(?P<bairro>.+?)\s+N$/u',
+        $afterProcedure,
         $m
     )) {
         $nomePaciente = trim($m['nome']);
         $dataNascimento = $m['nascimento'];
         $racaCodigo = ltrim($m['raca'], '0');
+        $cid = trim($m['cid']);
         $cep = $m['cep'];
         $logradouroCodigo = $m['logradouro_codigo'];
         $logradouroTipo = $logradouroMap[$logradouroCodigo] ?? $logradouroCodigo;
         $logradouroNome = trim($m['logradouro_nome']);
+        $bairro = trim($m['bairro']);
+        $complementos = trim(($m['zona'] ?? '') . ' ' . ($m['numero'] ?? ''));
     } else {
-        if (preg_match('/BPA(?P<nome>[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ ]+?)\s(?P<nascimento>\d{8})/u', $resto, $m2)) {
+        // Fallbacks mais tolerantes para evitar quebra da visualização.
+        if (preg_match('/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})/u', $afterProcedure, $m2)) {
             $nomePaciente = trim($m2['nome']);
             $dataNascimento = $m2['nascimento'];
         }
 
-        if (preg_match('/\b(0[1-5])\b/', $resto, $m3)) {
+        if (preg_match('/\b(0[1-5])\b/', $afterProcedure, $m3)) {
             $racaCodigo = ltrim($m3[1], '0');
         }
 
-        if (preg_match('/\b(\d{8})\b/', $resto, $m4)) {
+        if (preg_match('/\b(\d{8})\b/', $afterProcedure, $m4)) {
             $cep = $m4[1];
         }
 
-        if (preg_match('/\b(0\d{2})/', $resto, $m5)) {
+        if (preg_match('/\b(\d{3})(?=[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ])/', $afterProcedure, $m5)) {
             $logradouroCodigo = $m5[1];
             $logradouroTipo = $logradouroMap[$logradouroCodigo] ?? $logradouroCodigo;
         }
+
+        if (preg_match('/\b(ZONA\s+(?:RURAL|RURALS|URBANA|URBANS))\b/u', $afterProcedure, $m6)) {
+            $bairro = trim($m6[1]);
+        }
     }
 
-    if (preg_match('/\b(ZONA\s+(?:RURAL|URBANA|URBANS|RURALS))\b/u', $resto, $mz)) {
-        $bairro = trim($mz[1]);
-    }
-
-    if (preg_match('/\b(ZONA\s+(?:RURAL|URBANA|URBANS|RURALS)).*?\b([A-ZÁÀÂÃÉÊÍÓÔÕÚÇ ]{3,})\s+N$/u', $resto, $mb)) {
-        $complementos = trim($mb[2]);
-    }
-
-    if (preg_match('/[MFI]$/', $cnsPacienteRaw, $mx)) {
-        $sexoCodigo = $mx[0];
-        $cnsPaciente = substr($cnsPacienteRaw, 0, 14);
+    // Sexo / município / idade / CID / caráter de atendimento
+    // Nos registros do BPA-I, após o procedimento, o sexo pode ficar no fim do CNS do paciente
+    // e o município vem logo em seguida.
+    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})\s*(?P<idade>\d{3})\s*(?P<cid>\d{3})\s*(?P<carater>\d{2})\s*BPA/u', $afterProcedure, $mm)) {
+        $cnsPaciente = $mm['cns'];
+        $sexoCodigo = $mm['sexo'];
+        $municipioCodigo = $mm['muni'];
+        $idade = $mm['idade'];
+        $cid = $cid ?? $mm['cid'];
+        $caraterAtendimento = $mm['carater'];
     } else {
-        $cnsPaciente = $cnsPacienteRaw;
+        // Fallback mais amplo
+        if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})/u', $afterProcedure, $mm2)) {
+            $cnsPaciente = $mm2['cns'];
+            $sexoCodigo = $mm2['sexo'];
+            $municipioCodigo = $mm2['muni'];
+        }
+
+        if (preg_match('/\b(\d{3})\b/', $afterProcedure, $mi)) {
+            $idade = $mi[1];
+        }
     }
 
-    if (strlen($municipioCodigo) !== 6 && preg_match('/\d{6}/', $line, $mm)) {
-        $municipioCodigo = $mm[0];
+    if ($cnsPaciente === null && preg_match('/\b([0-9]{14,15})\b/u', $afterProcedure, $mcns)) {
+        $cnsPaciente = $mcns[1];
     }
 
     $sexo = $sexoMap[$sexoCodigo] ?? $sexoCodigo;
