@@ -107,6 +107,7 @@ function parseRecord03(string $line): array
     $idade = null;
     $cid = null;
     $caraterAtendimento = null;
+    $nacionalidade = null;
     $nomePaciente = null;
     $dataNascimento = null;
     $racaCodigo = null;
@@ -181,6 +182,11 @@ function parseRecord03(string $line): array
         $idade = $mi2[1];
     }
 
+    // Nacionalidade: no layout exibido vem logo no bloco após idade/codificação interna
+    if (preg_match('/\b(?P<nacionalidade>\d{2})\b/u', $afterProcedure, $mn)) {
+        $nacionalidade = $mn['nacionalidade'];
+    }
+
     // CID: costuma aparecer depois da data de nascimento, mas em alguns arquivos vem como 010 (usado internamente)
     if ($cid === null && preg_match('/\b(\d{3})\s+010\b/', $afterProcedure, $mcid)) {
         $cid = $mcid[1];
@@ -219,6 +225,7 @@ function parseRecord03(string $line): array
         'municipio_codigo' => $municipioCodigo,
         'municipio_residencia' => $municipioResidencia,
         'idade' => $idade,
+        'nacionalidade' => $nacionalidade,
         'cid' => $cid,
         'carater_atendimento' => $caraterAtendimento,
         'nome_paciente' => $nomePaciente,
@@ -543,6 +550,7 @@ if ($result) {
                         <th>CNS Paciente</th>
                         <th>Sexo</th>
                         <th>Mun. Resid.</th>
+                        <th>Nacionalidade</th>
                         <th>Nome Paciente</th>
                         <th>Nasc.</th>
                         <th>Raça/Cor</th>
@@ -555,7 +563,7 @@ if ($result) {
                     </thead>
                     <tbody>
                     <?php if (empty($filtered03)): ?>
-                        <tr><td colspan="19" class="text-center text-muted py-4">Nenhum registro 03 encontrado.</td></tr>
+                        <tr><td colspan="20" class="text-center text-muted py-4">Nenhum registro 03 encontrado.</td></tr>
                     <?php else: ?>
                         <?php foreach ($filtered03 as $r): ?>
                             <tr class="mono">
@@ -570,6 +578,7 @@ if ($result) {
                                 <td><?= h($r['cns_paciente']) ?></td>
                                 <td><?= h($r['sexo']) ?></td>
                                 <td><?= h($r['municipio_residencia']) ?></td>
+                                <td><?= h($r['nacionalidade'] ?? '-') ?></td>
                                 <td><?= h($r['nome_paciente'] ?? '-') ?></td>
                                 <td><?= h(formatDate($r['data_nascimento'] ?? '')) ?></td>
                                 <td><?= h(($r['raca_cor_codigo'] ?? '-') . ' - ' . ($r['raca_cor'] ?? '-')) ?></td>
