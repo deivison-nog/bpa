@@ -114,13 +114,13 @@ function parseRecord03(string $line): array
     $procedimento = substr($line, 49, 10);
 
     // ─── BLOCO 3: Identificação do paciente (offsets 59–108) ─────────────
-    $cnsPaciente     = trim(substr($line, 59, 15));  // CNS do paciente (15 dígitos)
-    $sexoCodigo      = substr($line, 74, 1);         // M / F / I
-    $municipioCodigo = substr($line, 75, 6);         // Código IBGE do município
-    $caraterAtend    = trim(substr($line, 81, 4));   // Caráter de atendimento / cód. extra
-    $idade           = substr($line, 85, 3);          // Idade em anos (3 dígitos)
+    $cnsPaciente        = trim(substr($line, 59, 15));  // CNS do paciente (15 dígitos)
+    $sexoCodigo         = substr($line, 74, 1);         // M / F / I
+    $municipioCodigo    = substr($line, 75, 6);         // Código IBGE do município
+    $caraterAtendimento = trim(substr($line, 81, 4));   // Caráter de atendimento / cód. extra
+    $idade              = substr($line, 85, 3);          // Idade em anos (3 dígitos)
     // [88,94): código equipe/autorização (6 chars — não exibido)
-    $nacionalidade   = substr($line, 94, 2);          // 02 = Brasileiro, etc.
+    $nacionalidade      = substr($line, 94, 2);          // 02 = Brasileiro, etc.
     // [96,109): 13 chars de padding
 
     // ─── BLOCO 4: Dados BPA — marcador "BPA" sempre em offset 109 ────────
@@ -162,6 +162,7 @@ function parseRecord03(string $line): array
         // Extrai número e bairro:  <numero><espaços><bairro><espaços>[N]
         // O marcador "N" final pode estar ausente em alguns registros; usa-se trim()
         // como fallback. O placeholder "-" é normalizado para null.
+        // Nota: "ZOAN" (typo de "ZONA") e registros sem marcador de zona são tratados acima.
         if (preg_match(
             '/^(?P<numero>S\/N|SN|\d+)\s{1,6}(?P<bairro>.+?)\s*(?:N\s*)?$/u',
             $afterZona,
@@ -169,13 +170,17 @@ function parseRecord03(string $line): array
         )) {
             $numero = $am['numero'];
             $bairro = trim($am['bairro']);
-        } elseif (preg_match('/^(?P<bairro>[^-].+?)\s*(?:N\s*)?$/u', $afterZona, $am)) {
-            // Fallback: sem número explícito
+        } elseif (preg_match('/^(?P<bairro>[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ\w].{1,}?)\s*(?:N\s*)?$/u', $afterZona, $am)) {
+            // Fallback: sem número explícito (bairro deve começar com letra/dígito)
             $bairro = trim($am['bairro']);
         }
         // Normaliza placeholders "-"
-        if ($bairro === '-' || $bairro === '') $bairro = null;
-        if ($numero === '-' || $numero === '') $numero = null;
+        if ($bairro === '-' || $bairro === '') {
+            $bairro = null;
+        }
+        if ($numero === '-' || $numero === '') {
+            $numero = null;
+        }
     }
 
     // ─── Lookups e derivações ─────────────────────────────────────────────
@@ -203,7 +208,7 @@ function parseRecord03(string $line): array
         'municipio_codigo'          => $municipioCodigo,
         'municipio_residencia'      => $municipioResidencia,
         'idade'                     => $idade,
-        'carater_atendimento'       => ($caraterAtend !== '') ? $caraterAtend : null,
+        'carater_atendimento'       => ($caraterAtendimento !== '') ? $caraterAtendimento : null,
         'nacionalidade'             => $nacionalidade,
         'cid'                       => ($cid !== '') ? $cid : null,
         'nome_paciente'             => ($nomePaciente !== '') ? $nomePaciente : null,
