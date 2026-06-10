@@ -465,10 +465,15 @@ if ($result) {
                 <h1 class="h3 mb-1">Visualizador BPA</h1>
                 <div class="text-muted">Upload do TXT e leitura dos registros 01, 02 e 03 com offsets oficiais.</div>
             </div>
-            <form method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
-                <input type="file" class="form-control" name="bpa_file" accept=".txt,text/plain" required>
-                <button class="btn btn-primary" type="submit">Carregar</button>
-            </form>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <form method="post" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                    <input type="file" class="form-control" name="bpa_file" accept=".txt,text/plain" required>
+                    <button class="btn btn-primary" type="submit">Carregar</button>
+                </form>
+                <?php if ($result): ?>
+                    <a href="grafico.php" class="btn btn-outline-success">📊 Ver Gráficos</a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
