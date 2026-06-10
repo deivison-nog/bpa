@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 session_start();
 
+const CNS_SUFFIX_LENGTH = 6;
+
 function h(?string $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
@@ -109,7 +111,6 @@ $content = (string)($_SESSION['bpa_content'] ?? '');
 $profissionaisMap = loadProfissionaisMap(__DIR__ . '/profissionais.json');
 $records03 = [];
 $records02 = [];
-const CNS_SUFFIX_LENGTH = 6;
 
 if ($content !== '') {
     foreach (normalizeLines($content) as $line) {

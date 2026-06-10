@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 session_start();
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 function h(?string $value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
@@ -74,6 +78,11 @@ $editNome = '';
 $profissionais = loadProfissionais();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $csrfToken = (string)($_POST['csrf_token'] ?? '');
+    if (!hash_equals((string)$_SESSION['csrf_token'], $csrfToken)) {
+        $error = 'Falha de segurança (CSRF). Recarregue a página e tente novamente.';
+        $profissionais = loadProfissionais();
+    } else {
     $action = $_POST['action'] ?? '';
     $nome = trim((string)($_POST['nome'] ?? ''));
     $cns = normalizeCns((string)($_POST['cns'] ?? ''));
@@ -141,6 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $profissionais = loadProfissionais();
+    }
 }
 
 if (isset($_GET['edit'])) {
@@ -188,6 +198,7 @@ if (isset($_GET['edit'])) {
         <div class="card-header bg-white"><strong><?= $editCns !== '' ? 'Editar profissional' : 'Novo profissional' ?></strong></div>
         <div class="card-body">
             <form method="post" class="row g-3">
+                <input type="hidden" name="csrf_token" value="<?= h((string)$_SESSION['csrf_token']) ?>">
                 <input type="hidden" name="action" value="save">
                 <input type="hidden" name="old_cns" value="<?= h($editCns) ?>">
                 <div class="col-md-7">
@@ -233,6 +244,7 @@ if (isset($_GET['edit'])) {
                             <td class="text-end">
                                 <a href="profissional.php?edit=<?= urlencode($prof['cns']) ?>" class="btn btn-sm btn-outline-primary">Editar</a>
                                 <form method="post" class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este profissional?');">
+                                    <input type="hidden" name="csrf_token" value="<?= h((string)$_SESSION['csrf_token']) ?>">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="cns" value="<?= h($prof['cns']) ?>">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
