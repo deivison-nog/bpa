@@ -103,8 +103,13 @@ arsort($procCounts);
 $profCounts = [];
 foreach ($records03 as $r) {
     $cns = $r['cns_profissional'];
-    $suffix = strlen($cns) > 6 ? '...' . substr($cns, -6) : $cns;
-    $label = 'CNS ' . ($suffix !== '' ? $suffix : 'não informado');
+    if ($cns === '') {
+        $label = 'CNS não informado';
+    } elseif (strlen($cns) < 6) {
+        $label = 'CNS incompleto';
+    } else {
+        $label = 'CNS ...' . substr($cns, -6);
+    }
     $profCounts[$label] = ($profCounts[$label] ?? 0) + 1;
 }
 arsort($profCounts);
