@@ -470,6 +470,7 @@ if ($result) {
                     <input type="file" class="form-control" name="bpa_file" accept=".txt,text/plain" required>
                     <button class="btn btn-primary" type="submit">Carregar</button>
                 </form>
+                <a href="profissional.php" class="btn btn-outline-primary">👨‍⚕️ Profissionais</a>
                 <?php if ($result): ?>
                     <a href="grafico.php" class="btn btn-outline-success">📊 Ver Gráficos</a>
                 <?php endif; ?>

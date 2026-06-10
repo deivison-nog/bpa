@@ -15,6 +15,43 @@ function normalizeLines(string $content): array
     return array_values(array_filter($lines, fn($l) => trim($l) !== ''));
 }
 
+function normalizeCns(string $value): string
+{
+    return preg_replace('/\D+/', '', trim($value)) ?? '';
+}
+
+function loadProfissionaisMap(string $path): array
+{
+    if (!is_file($path)) {
+        return [];
+    }
+
+    $content = file_get_contents($path);
+    if ($content === false || trim($content) === '') {
+        return [];
+    }
+
+    $data = json_decode($content, true);
+    if (!is_array($data)) {
+        return [];
+    }
+
+    $map = [];
+    foreach ($data as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $cns = normalizeCns((string)($item['cns'] ?? ''));
+        $nome = trim((string)($item['nome'] ?? ''));
+        if ($cns === '' || $nome === '') {
+            continue;
+        }
+        $map[$cns] = $nome;
+    }
+
+    return $map;
+}
+
 /**
  * Extrai apenas os campos necessários para os gráficos a partir de uma linha tipo 03.
  */
@@ -68,6 +105,7 @@ function extractRecord02Chart(string $line): ?array
 }
 
 $content = (string)($_SESSION['bpa_content'] ?? '');
+$profissionaisMap = loadProfissionaisMap(__DIR__ . '/profissionais.json');
 $records03 = [];
 $records02 = [];
 
@@ -103,12 +141,14 @@ arsort($procCounts);
 $profCounts = [];
 foreach ($records03 as $r) {
     $cns = $r['cns_profissional'];
-    if ($cns === '') {
-        $label = 'CNS não informado';
+    if ($cns !== '' && isset($profissionaisMap[$cns])) {
+        $label = $profissionaisMap[$cns];
+    } elseif ($cns === '') {
+        $label = 'Profissional não informado';
     } elseif (strlen($cns) < 6) {
-        $label = 'CNS incompleto';
+        $label = 'Profissional com CNS incompleto';
     } else {
-        $label = 'CNS ...' . substr($cns, -6);
+        $label = 'CNS ...' . substr($cns, -6) . ' (sem cadastro)';
     }
     $profCounts[$label] = ($profCounts[$label] ?? 0) + 1;
 }
@@ -191,7 +231,10 @@ function jsonColors(int $count, array $palette): string
                     <?php endif; ?>
                 </div>
             </div>
-            <a href="index.php" class="btn btn-outline-secondary">← Voltar ao Visualizador</a>
+            <div class="d-flex gap-2">
+                <a href="profissional.php" class="btn btn-outline-primary">👨‍⚕️ Profissionais</a>
+                <a href="index.php" class="btn btn-outline-secondary">← Voltar ao Visualizador</a>
+            </div>
         </div>
     </div>
 
