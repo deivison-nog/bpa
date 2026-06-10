@@ -53,35 +53,55 @@ function extractRecord03Chart(string $line): ?array
     ];
 }
 
-$content  = (string)($_SESSION['bpa_content'] ?? '');
-$records  = [];
+function extractRecord02Chart(string $line): ?array
+{
+    $line = trim($line);
+    if (substr($line, 0, 2) !== '02') {
+        return null;
+    }
+
+    return [
+        'cbo' => trim(substr($line, 15, 6)),
+        'procedimento' => substr($line, 26, 10),
+        'quantidade' => (int) substr($line, 39, 6),
+    ];
+}
+
+$content = (string)($_SESSION['bpa_content'] ?? '');
+$records03 = [];
+$records02 = [];
 
 if ($content !== '') {
     foreach (normalizeLines($content) as $line) {
-        $r = extractRecord03Chart($line);
-        if ($r !== null) {
-            $records[] = $r;
+        $r03 = extractRecord03Chart($line);
+        if ($r03 !== null) {
+            $records03[] = $r03;
+        }
+
+        $r02 = extractRecord02Chart($line);
+        if ($r02 !== null) {
+            $records02[] = $r02;
         }
     }
 }
 
 // ── Gráfico 1: Sexo ─────────────────────────────────────────────────────────
 $sexoCounts = [];
-foreach ($records as $r) {
+foreach ($records03 as $r) {
     $sexoCounts[$r['sexo']] = ($sexoCounts[$r['sexo']] ?? 0) + 1;
 }
 arsort($sexoCounts);
 
 // ── Gráfico 2: Procedimentos por código ─────────────────────────────────────
 $procCounts = [];
-foreach ($records as $r) {
+foreach ($records03 as $r) {
     $procCounts[$r['procedimento']] = ($procCounts[$r['procedimento']] ?? 0) + 1;
 }
 arsort($procCounts);
 
 // ── Gráfico 3: Procedimentos por profissional ────────────────────────────────
 $profCounts = [];
-foreach ($records as $r) {
+foreach ($records03 as $r) {
     $cns = $r['cns_profissional'];
     $label = 'CNS ...' . substr($cns, -6);
     $profCounts[$label] = ($profCounts[$label] ?? 0) + 1;
@@ -90,12 +110,28 @@ arsort($profCounts);
 
 // ── Gráfico 4: Raça/Cor ──────────────────────────────────────────────────────
 $racaCounts = [];
-foreach ($records as $r) {
+foreach ($records03 as $r) {
     $racaCounts[$r['raca_cor']] = ($racaCounts[$r['raca_cor']] ?? 0) + 1;
 }
 arsort($racaCounts);
 
-$total = count($records);
+// ── Gráfico 5: BPA consolidado por procedimento ──────────────────────────────
+$procConsolidadoCounts = [];
+foreach ($records02 as $r) {
+    $procConsolidadoCounts[$r['procedimento']] = ($procConsolidadoCounts[$r['procedimento']] ?? 0) + $r['quantidade'];
+}
+arsort($procConsolidadoCounts);
+
+// ── Gráfico 6: BPA consolidado por CBO ───────────────────────────────────────
+$cboCounts = [];
+foreach ($records02 as $r) {
+    $cbo = $r['cbo'] !== '' ? $r['cbo'] : 'Não informado';
+    $cboCounts[$cbo] = ($cboCounts[$cbo] ?? 0) + $r['quantidade'];
+}
+arsort($cboCounts);
+
+$total03 = count($records03);
+$total02 = array_sum(array_column($records02, 'quantidade'));
 
 // Helper: encode array for Chart.js JSON
 function jsonLabels(array $data): string
@@ -125,7 +161,7 @@ function jsonColors(int $count, array $palette): string
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Gráficos BPA-I</title>
+    <title>Gráficos BPA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { background: #f5f7fb; }
@@ -140,11 +176,12 @@ function jsonColors(int $count, array $palette): string
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body d-flex justify-content-between align-items-center flex-wrap gap-3">
             <div>
-                <h1 class="h3 mb-1">Gráficos — Produção BPA-I</h1>
+                <h1 class="h3 mb-1">Gráficos — Produção BPA</h1>
                 <div class="text-muted">
-                    Análise dos registros individualizados (tipo 03) do arquivo carregado.
-                    <?php if ($total > 0): ?>
-                        Total de atendimentos: <strong><?= $total ?></strong>
+                    Análise dos registros individualizados (tipo 03) e consolidados (tipo 02) do arquivo carregado.
+                    <?php if ($total03 > 0 || $total02 > 0): ?>
+                        BPA-I: <strong><?= $total03 ?></strong> atendimento(s) |
+                        BPA-C: <strong><?= $total02 ?></strong> procedimento(s)
                     <?php endif; ?>
                 </div>
             </div>
@@ -152,15 +189,16 @@ function jsonColors(int $count, array $palette): string
         </div>
     </div>
 
-    <?php if ($total === 0): ?>
+    <?php if ($total03 === 0 && $total02 === 0): ?>
         <div class="alert alert-warning">
-            Nenhum registro BPA-I (tipo 03) encontrado.
+            Nenhum registro BPA-I (tipo 03) ou BPA consolidado (tipo 02) encontrado.
             <a href="index.php" class="alert-link">Carregue um arquivo na página principal</a> para visualizar os gráficos.
         </div>
     <?php else: ?>
 
     <div class="row g-4">
 
+        <?php if ($total03 > 0): ?>
         <!-- Gráfico 1: Sexo (Pizza) -->
         <div class="col-xl-6">
             <div class="chart-card h-100">
@@ -192,6 +230,23 @@ function jsonColors(int $count, array $palette): string
                 <canvas id="chartProf"></canvas>
             </div>
         </div>
+        <?php endif; ?>
+
+        <?php if ($total02 > 0): ?>
+        <div class="col-xl-6">
+            <div class="chart-card h-100">
+                <div class="chart-title">📦 BPA Consolidado por Procedimento</div>
+                <canvas id="chartProcConsolidado"></canvas>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="chart-card h-100">
+                <div class="chart-title">🧾 BPA Consolidado por CBO</div>
+                <canvas id="chartCbo"></canvas>
+            </div>
+        </div>
+        <?php endif; ?>
 
     </div>
 
@@ -216,6 +271,7 @@ function jsonColors(int $count, array $palette): string
         }
     });
 
+    <?php if ($total03 > 0): ?>
     // Sexo
     new Chart(document.getElementById('chartSexo'), {
         type: 'pie',
@@ -291,6 +347,39 @@ function jsonColors(int $count, array $palette): string
             }
         }
     });
+    <?php endif; ?>
+
+    <?php if ($total02 > 0): ?>
+    // BPA consolidado por procedimento
+    new Chart(document.getElementById('chartProcConsolidado'), {
+        type: 'pie',
+        data: {
+            labels: <?= jsonLabels($procConsolidadoCounts) ?>,
+            datasets: [{
+                data: <?= jsonValues($procConsolidadoCounts) ?>,
+                backgroundColor: <?= jsonColors(count($procConsolidadoCounts), $pieColors) ?>,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: pieOptions('BPA Consolidado por Procedimento')
+    });
+
+    // BPA consolidado por CBO
+    new Chart(document.getElementById('chartCbo'), {
+        type: 'pie',
+        data: {
+            labels: <?= jsonLabels($cboCounts) ?>,
+            datasets: [{
+                data: <?= jsonValues($cboCounts) ?>,
+                backgroundColor: <?= jsonColors(count($cboCounts), $pieColors) ?>,
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: pieOptions('BPA Consolidado por CBO')
+    });
+    <?php endif; ?>
     </script>
 
     <?php endif; ?>
