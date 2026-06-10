@@ -10,7 +10,8 @@ function h(?string $value): string
 
 function normalizeCns(string $cns): string
 {
-    return preg_replace('/\D+/', '', trim($cns)) ?? '';
+    $normalized = preg_replace('/\D+/', '', trim($cns));
+    return is_string($normalized) ? $normalized : '';
 }
 
 function profissionaisPath(): string

@@ -17,7 +17,8 @@ function normalizeLines(string $content): array
 
 function normalizeCns(string $value): string
 {
-    return preg_replace('/\D+/', '', trim($value)) ?? '';
+    $normalized = preg_replace('/\D+/', '', trim($value));
+    return is_string($normalized) ? $normalized : '';
 }
 
 function loadProfissionaisMap(string $path): array
@@ -108,6 +109,7 @@ $content = (string)($_SESSION['bpa_content'] ?? '');
 $profissionaisMap = loadProfissionaisMap(__DIR__ . '/profissionais.json');
 $records03 = [];
 $records02 = [];
+const CNS_SUFFIX_LENGTH = 6;
 
 if ($content !== '') {
     foreach (normalizeLines($content) as $line) {
@@ -145,10 +147,10 @@ foreach ($records03 as $r) {
         $label = $profissionaisMap[$cns];
     } elseif ($cns === '') {
         $label = 'Profissional não informado';
-    } elseif (strlen($cns) < 6) {
+    } elseif (strlen($cns) < CNS_SUFFIX_LENGTH) {
         $label = 'Profissional com CNS incompleto';
     } else {
-        $label = 'CNS ...' . substr($cns, -6) . ' (sem cadastro)';
+        $label = 'CNS ...' . substr($cns, -CNS_SUFFIX_LENGTH) . ' (sem cadastro)';
     }
     $profCounts[$label] = ($profCounts[$label] ?? 0) + 1;
 }
