@@ -62,8 +62,6 @@ function parseRecord02(string $line): array
 
 function parseRecord03(string $line): array
 {
-    $line = trim($line);
-
     $sexoMap = [
         'M' => 'Masculino',
         'F' => 'Feminino',
@@ -79,7 +77,19 @@ function parseRecord03(string $line): array
     ];
 
     $logradouroMap = [
+        '004' => 'ÁREA',
+        '008' => 'AVENIDA',
+        '011' => 'CAMPO',
+        '020' => 'COMUNIDADE',
+        '031' => 'ESTRADA',
+        '074' => 'RAMAL',
         '081' => 'RUA',
+        '082' => 'RUA DE PEDESTRE',
+        '090' => 'TRAVESSA',
+        '091' => 'TRECHO',
+        '092' => 'TREVO',
+        '100' => 'VILA',
+        '746' => 'SÍTIO',
     ];
 
     $municipioMap = [
@@ -88,158 +98,190 @@ function parseRecord03(string $line): array
         '150820' => 'Viseu',
     ];
 
-    // Offsets fixos até o procedimento
-    $cnes = substr($line, 2, 7);
-    $competencia = substr($line, 9, 6);
-    $cnsProfissional = substr($line, 15, 15);
-    $cbo = substr($line, 30, 6);
-    $dataAtendimento = substr($line, 36, 8);
-    $folhaBpa = substr($line, 44, 3);
-    $sequencia = substr($line, 47, 2);
-    $quantidade = substr($line, 49, 1);
-    $procedimento = substr($line, 50, 10);
+    // ─── BLOCO 1: Cabeçalho fixo (offsets 0–48) ──────────────────────────
+    $cnes            = substr($line, 2,  7);   // Código CNES
+    $competencia     = substr($line, 9,  6);   // Competência AAAAMM
+    $cnsProfissional = substr($line, 15, 15);  // CNS do profissional
+    $cbo             = substr($line, 30, 6);   // CBO do profissional
+    $dataAtendimento = substr($line, 36, 8);   // Data AAAAMMDD
+    $folhaBpa        = substr($line, 44, 3);   // Número da folha
+    $sequencia       = substr($line, 47, 2);   // Sequência na folha
 
-    // Bloco livre após o procedimento
-    $afterProcedure = substr($line, 60);
+    // ─── BLOCO 2: Procedimento (offset 49, 10 dígitos SIGTAP) ────────────
+    // BPA-I tipo 03 é individualizado: quantidade implícita = 1 por registro.
+    // O layout real não possui campo "quantidade" separado nesta posição;
+    // o código SIGTAP de 10 dígitos começa diretamente no offset 49.
+    $procedimento = substr($line, 49, 10);
 
-    $sexoCodigo = null;
-    $municipioCodigo = null;
-    $idade = null;
-    $cid = null;
-    $caraterAtendimento = null;
-    $nacionalidade = null;
-    $nomePaciente = null;
-    $dataNascimento = null;
-    $racaCodigo = null;
-    $cep = null;
-    $logradouroCodigo = null;
-    $logradouroTipo = null;
-    $logradouroNome = null;
-    $bairro = null;
-    $complementos = null;
-    $cnsPaciente = null;
+    // ─── BLOCO 3: Identificação do paciente (offsets 59–108) ─────────────
+    $cnsPaciente     = trim(substr($line, 59, 15));  // CNS do paciente (15 dígitos)
+    $sexoCodigo      = substr($line, 74, 1);         // M / F / I
+    $municipioCodigo = substr($line, 75, 6);         // Código IBGE do município
+    $caraterAtend    = trim(substr($line, 81, 4));   // Caráter de atendimento / cód. extra
+    $idade           = substr($line, 85, 3);          // Idade em anos (3 dígitos)
+    // [88,94): código equipe/autorização (6 chars — não exibido)
+    $nacionalidade   = substr($line, 94, 2);          // 02 = Brasileiro, etc.
+    // [96,109): 13 chars de padding
 
-    // Estrutura esperada no bloco textual:
-    // BPA + NOME + NASCIMENTO + RAÇA/COR + CID + CEP + LOGRADOURO + ZONA + NÚMERO + BAIRRO + COMPLEMENTOS
-    if (preg_match(
-        '/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})(?P<raca>\d{2})\s*(?P<cid>\d{3})\s*(?P<cep>\d{8})(?P<logradouro_codigo>\d{3})(?P<logradouro_nome>.+?)\s+ZONA\s+(?P<zona>RURAIS?|URBANS?|URBANA|RURAL|URBANO)(?P<numero>S\/N|\d+)?\s+(?P<bairro>.+?)\s+N$/u',
-        $afterProcedure,
-        $m
-    )) {
-        $nomePaciente = trim($m['nome']);
-        $dataNascimento = $m['nascimento'];
-        $racaCodigo = ltrim($m['raca'], '0');
-        $cid = trim($m['cid']);
-        $cep = $m['cep'];
-        $logradouroCodigo = $m['logradouro_codigo'];
-        $logradouroTipo = $logradouroMap[$logradouroCodigo] ?? $logradouroCodigo;
-        $logradouroNome = trim($m['logradouro_nome']);
-        $bairro = trim($m['bairro']);
-        $complementos = trim(($m['zona'] ?? '') . ' ' . ($m['numero'] ?? ''));
-    } else {
-        if (preg_match('/BPA(?P<nome>.+?)\s(?P<nascimento>\d{8})/u', $afterProcedure, $m2)) {
-            $nomePaciente = trim($m2['nome']);
-            $dataNascimento = $m2['nascimento'];
+    // ─── BLOCO 4: Dados BPA — marcador "BPA" sempre em offset 109 ────────
+    // [109,112) = literal "BPA"
+    $nomePaciente   = trim(substr($line, 112, 30)); // Nome (30 chars, padded com espaços)
+    $dataNascimento = substr($line, 142, 8);         // Nascimento AAAAMMDD
+    $racaRaw        = substr($line, 150, 2);         // Raça/cor "01".."05"
+    $racaCodigo     = ltrim($racaRaw, '0');          // Remove zero à esquerda → "1".."5"
+    $cid            = trim(substr($line, 152, 4));   // CID-10 (4 chars, pode ser vazio)
+    // [156,159): código "010" (campo de saúde — não exibido diretamente)
+    // [159,165): código equipe de saúde (6 chars)
+    // [165,191): padding (26 chars)
+
+    // ─── BLOCO 5: Endereço — offsets fixos a partir de 191 ───────────────
+    $cep              = substr($line, 191, 8);         // CEP (8 dígitos)
+    $logradouroCodigo = substr($line, 199, 3);         // Código tipo de logradouro
+    $logradouroNome   = trim(substr($line, 202, 30));  // Nome do logradouro (30 chars)
+
+    // ─── BLOCO 6: ZONA + Número + Bairro (offset 232) ────────────────────
+    $zonaTipo = null;
+    $numero   = null;
+    $bairro   = null;
+
+    if (strlen($line) > 232) {
+        $addrBlock = substr($line, 232);
+
+        // Normaliza typo recorrente "ZOAN" → "ZONA"
+        $addrBlock = (string) preg_replace('/^ZOAN\s/u', 'ZONA ', $addrBlock);
+
+        if (str_starts_with($addrBlock, 'ZONA ')) {
+            // Tipo de zona: "RURAL" ou "URBAN" (5 chars após "ZONA ")
+            $zonaTipo  = trim(substr($addrBlock, 5, 5));
+            $afterZona = substr($addrBlock, 10); // "S/N  bairro...N" ou "151  bairro...N"
+        } else {
+            // Sem marcador ZONA (registros sem informação de zona)
+            $afterZona = ltrim($addrBlock);
         }
 
-        if (preg_match('/\b(0[1-5])\b/', $afterProcedure, $m3)) {
-            $racaCodigo = ltrim($m3[1], '0');
+        // Extrai número e bairro:  <numero><espaços><bairro><espaços>[N]
+        // O marcador "N" final pode estar ausente em alguns registros; usa-se trim()
+        // como fallback. O placeholder "-" é normalizado para null.
+        if (preg_match(
+            '/^(?P<numero>S\/N|SN|\d+)\s{1,6}(?P<bairro>.+?)\s*(?:N\s*)?$/u',
+            $afterZona,
+            $am
+        )) {
+            $numero = $am['numero'];
+            $bairro = trim($am['bairro']);
+        } elseif (preg_match('/^(?P<bairro>[^-].+?)\s*(?:N\s*)?$/u', $afterZona, $am)) {
+            // Fallback: sem número explícito
+            $bairro = trim($am['bairro']);
         }
-
-        if (preg_match('/\b(\d{8})\b/', $afterProcedure, $m4)) {
-            $cep = $m4[1];
-        }
-
-        if (preg_match('/\b(\d{3})(?=[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ])/', $afterProcedure, $m5)) {
-            $logradouroCodigo = $m5[1];
-            $logradouroTipo = $logradouroMap[$logradouroCodigo] ?? $logradouroCodigo;
-        }
-
-        if (preg_match('/\b(ZONA\s+(?:RURAL|RURALS|URBANA|URBANS))\b/u', $afterProcedure, $m6)) {
-            $bairro = trim($m6[1]);
-        }
+        // Normaliza placeholders "-"
+        if ($bairro === '-' || $bairro === '') $bairro = null;
+        if ($numero === '-' || $numero === '') $numero = null;
     }
 
-    // Captura sexo/município do trecho inicial e, se não estiver claro, do bloco livre
-    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})/u', $line, $mm)) {
-        $cnsPaciente = $mm['cns'];
-        $sexoCodigo = $mm['sexo'];
-        $municipioCodigo = $mm['muni'];
-    }
-
-    if ($sexoCodigo === null && preg_match('/[MFI]/', $afterProcedure, $mx)) {
-        $sexoCodigo = $mx[0];
-    }
-
-    if ($municipioCodigo === null && preg_match('/\b(150260|150290|150820)\b/', $line, $mm2)) {
-        $municipioCodigo = $mm2[1];
-    }
-
-    // Idade: tenta pegar o valor logo após o município, ou o primeiro grupo de 3 dígitos plausível
-    if (preg_match('/(?P<cns>[0-9]{14,15})(?P<sexo>[MFI])(?P<muni>\d{6})\s*(?P<idade>\d{3})/u', $line, $mi)) {
-        $idade = $mi['idade'];
-    } elseif (preg_match('/\b(\d{3})\s+010\b/', $afterProcedure, $mi2)) {
-        $idade = $mi2[1];
-    }
-
-    // Nacionalidade: no layout exibido vem logo no bloco após idade/codificação interna
-    if (preg_match('/\b(?P<nacionalidade>\d{2})\b/u', $afterProcedure, $mn)) {
-        $nacionalidade = $mn['nacionalidade'];
-    }
-
-    // CID: costuma aparecer depois da data de nascimento, mas em alguns arquivos vem como 010 (usado internamente)
-    if ($cid === null && preg_match('/\b(\d{3})\s+010\b/', $afterProcedure, $mcid)) {
-        $cid = $mcid[1];
-    }
-
-    // Caráter de atendimento: quando houver no texto livre, pode ser o 2º ou 3º bloco numérico
-    if ($caraterAtendimento === null && preg_match('/\b010\s*(\d{2})\b/', $afterProcedure, $mcar)) {
-        $caraterAtendimento = $mcar[1];
-    }
-
-    // Se o CPF/CNS do paciente estiver presente, capturamos do trecho após o procedimento
-    if ($cnsPaciente === null && preg_match('/\b([0-9]{14,15})\b/u', $afterProcedure, $mcns)) {
-        $cnsPaciente = $mcns[1];
-    }
-
-    $sexo = $sexoMap[$sexoCodigo] ?? $sexoCodigo;
-    $racaCorCodigo = $racaCodigo ?? null;
-    $racaCor = $racaCorCodigo !== null ? ($racaMap[$racaCorCodigo] ?? $racaCorCodigo) : null;
+    // ─── Lookups e derivações ─────────────────────────────────────────────
+    $sexo                = $sexoMap[$sexoCodigo] ?? $sexoCodigo;
+    $racaCorCodigo       = ($racaCodigo !== '') ? $racaCodigo : null;
+    $racaCor             = ($racaCorCodigo !== null) ? ($racaMap[$racaCorCodigo] ?? $racaCorCodigo) : null;
     $municipioResidencia = $municipioMap[$municipioCodigo] ?? $municipioCodigo;
+    $logradouroTipo      = $logradouroMap[$logradouroCodigo] ?? $logradouroCodigo;
 
     return [
-        'raw' => $line,
-        'tipo' => '03',
-        'cnes' => $cnes,
-        'competencia' => $competencia,
-        'cns_profissional' => $cnsProfissional,
-        'cbo' => $cbo,
-        'data_atendimento' => $dataAtendimento,
-        'folha_bpa' => $folhaBpa,
-        'sequencia' => $sequencia,
-        'quantidade' => $quantidade,
-        'procedimento' => $procedimento,
-        'cns_paciente' => $cnsPaciente,
-        'sexo_codigo' => $sexoCodigo,
-        'sexo' => $sexo,
-        'municipio_codigo' => $municipioCodigo,
-        'municipio_residencia' => $municipioResidencia,
-        'idade' => $idade,
-        'nacionalidade' => $nacionalidade,
-        'cid' => $cid,
-        'carater_atendimento' => $caraterAtendimento,
-        'nome_paciente' => $nomePaciente,
-        'data_nascimento' => $dataNascimento,
+        'raw'                       => $line,
+        'tipo'                      => '03',
+        'cnes'                      => $cnes,
+        'competencia'               => $competencia,
+        'cns_profissional'          => $cnsProfissional,
+        'cbo'                       => $cbo,
+        'data_atendimento'          => $dataAtendimento,
+        'folha_bpa'                 => $folhaBpa,
+        'sequencia'                 => $sequencia,
+        'quantidade'                => 1,   // BPA-I individualizado: 1 atendimento por registro
+        'procedimento'              => $procedimento,
+        'cns_paciente'              => ($cnsPaciente !== '') ? $cnsPaciente : null,
+        'sexo_codigo'               => $sexoCodigo,
+        'sexo'                      => $sexo,
+        'municipio_codigo'          => $municipioCodigo,
+        'municipio_residencia'      => $municipioResidencia,
+        'idade'                     => $idade,
+        'carater_atendimento'       => ($caraterAtend !== '') ? $caraterAtend : null,
+        'nacionalidade'             => $nacionalidade,
+        'cid'                       => ($cid !== '') ? $cid : null,
+        'nome_paciente'             => ($nomePaciente !== '') ? $nomePaciente : null,
+        'data_nascimento'           => $dataNascimento,
         'data_nascimento_formatada' => formatDate($dataNascimento),
-        'raca_cor_codigo' => $racaCorCodigo,
-        'raca_cor' => $racaCor,
-        'cep' => $cep,
-        'logradouro_codigo' => $logradouroCodigo,
-        'logradouro_tipo' => $logradouroTipo,
-        'logradouro_nome' => $logradouroNome,
-        'bairro' => $bairro,
-        'complementos' => $complementos,
+        'raca_cor_codigo'           => $racaCorCodigo,
+        'raca_cor'                  => $racaCor,
+        'cep'                       => $cep,
+        'logradouro_codigo'         => $logradouroCodigo,
+        'logradouro_tipo'           => $logradouroTipo,
+        'logradouro_nome'           => $logradouroNome,
+        'zona'                      => $zonaTipo,
+        'numero'                    => $numero,
+        'bairro'                    => $bairro,
+        'complementos'              => trim(implode(' ', array_filter([$zonaTipo, $numero]))),
     ];
+}
+
+/**
+ * Exibe informações de depuração para um registro 03 já parseado.
+ * Útil para identificar campos suspeitos ou nulos.
+ */
+function debugRecord03(array $parsed): string
+{
+    $line   = $parsed['raw'];
+    $issues = [];
+
+    if (empty($parsed['cns_paciente']))    $issues[] = 'CNS paciente vazio';
+    if (empty($parsed['nome_paciente']))   $issues[] = 'Nome do paciente vazio';
+    if (strlen((string)($parsed['data_nascimento'] ?? '')) !== 8) $issues[] = 'Data de nascimento inválida';
+    if (empty($parsed['sexo_codigo']))     $issues[] = 'Sexo não identificado';
+    if (empty($parsed['cep']))             $issues[] = 'CEP vazio';
+    if (empty($parsed['bairro']))          $issues[] = 'Bairro não identificado';
+    if (empty($parsed['logradouro_nome'])) $issues[] = 'Logradouro vazio';
+    if (empty($parsed['procedimento']) || strlen($parsed['procedimento']) !== 10) $issues[] = 'Procedimento inválido';
+
+    $fields = [
+        '[2,9)'    => ['CNES',              $parsed['cnes']],
+        '[9,15)'   => ['Competência',        $parsed['competencia']],
+        '[15,30)'  => ['CNS Profissional',   $parsed['cns_profissional']],
+        '[30,36)'  => ['CBO',                $parsed['cbo']],
+        '[36,44)'  => ['Data Atendimento',   $parsed['data_atendimento']],
+        '[44,47)'  => ['Folha',              $parsed['folha_bpa']],
+        '[47,49)'  => ['Sequência',          $parsed['sequencia']],
+        '[49,59)'  => ['Procedimento',       $parsed['procedimento']],
+        '[59,74)'  => ['CNS Paciente',       $parsed['cns_paciente']],
+        '[74]'     => ['Sexo',               ($parsed['sexo_codigo'] ?? '') . ' → ' . ($parsed['sexo'] ?? '')],
+        '[75,81)'  => ['Município',          ($parsed['municipio_codigo'] ?? '') . ' → ' . ($parsed['municipio_residencia'] ?? '')],
+        '[81,85)'  => ['Caráter/Cód. extra', $parsed['carater_atendimento']],
+        '[85,88)'  => ['Idade',              $parsed['idade']],
+        '[94,96)'  => ['Nacionalidade',      $parsed['nacionalidade']],
+        '[112,142)'=> ['Nome Paciente',      $parsed['nome_paciente']],
+        '[142,150)'=> ['Data Nascimento',    $parsed['data_nascimento']],
+        '[150,152)'=> ['Raça/Cor (cód.)',    $parsed['raca_cor_codigo']],
+        '[152,156)'=> ['CID',                $parsed['cid']],
+        '[191,199)'=> ['CEP',                $parsed['cep']],
+        '[199,202)'=> ['Logr. Código',       $parsed['logradouro_codigo']],
+        '[202,232)'=> ['Logr. Nome',         $parsed['logradouro_nome']],
+        'Zona'     => ['Zona',               $parsed['zona']],
+        'Número'   => ['Número',             $parsed['numero']],
+        'Bairro'   => ['Bairro',             $parsed['bairro']],
+    ];
+
+    $out  = "=== DEBUG parseRecord03 ===\n";
+    $out .= 'RAW [' . strlen($line) . " chars]: " . $line . "\n\n";
+
+    foreach ($fields as $offset => [$label, $val]) {
+        $flag = ($val === null || $val === '') ? '  ⚠ VAZIO' : '';
+        $out .= sprintf("  %-12s  %-22s = %s%s\n", $offset, $label, (string)$val, $flag);
+    }
+
+    if ($issues) {
+        $out .= "\n⚠️  CAMPOS SUSPEITOS: " . implode(', ', $issues) . "\n";
+    } else {
+        $out .= "\n✅  Todos os campos principais preenchidos.\n";
+    }
+
+    return $out;
 }
 
 function parseBpaContent(string $content): array
