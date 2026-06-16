@@ -142,6 +142,24 @@ function extractRecord02Chart(string $line): ?array
 $content = (string)($_SESSION['bpa_content'] ?? '');
 $profissionaisMap  = loadProfissionaisMap(__DIR__ . '/profissionais.json');
 $procedimentosMap  = loadProcedimentosMap(__DIR__ . '/sigtap/tb_procedimento.txt');
+
+// Merge supplemental map for procedure codes absent from the base SIGTAP table
+$extraPath = __DIR__ . '/sigtap/procedimentos_extra.json';
+if (is_file($extraPath)) {
+    $extraContent = file_get_contents($extraPath);
+    if ($extraContent !== false) {
+        $extraData = json_decode($extraContent, true);
+        if (is_array($extraData)) {
+            foreach ($extraData as $item) {
+                $co = trim((string)($item['co'] ?? ''));
+                $no = trim((string)($item['no'] ?? ''));
+                if ($co !== '' && $no !== '' && !isset($procedimentosMap[$co])) {
+                    $procedimentosMap[$co] = $no;
+                }
+            }
+        }
+    }
+}
 $records03 = [];
 $records02 = [];
 
