@@ -1,0 +1,7 @@
+01Atenção Básica (PAB)                                                                                201308
+02Assistência Farmacêutica                                                                            201308
+04Fundo de Ações Estratégicas e Compensações (FAEC)                                                   201308
+05Incentivo - MAC                                                                                     201308
+06Média e Alta Complexidade (MAC)                                                                     201308
+07Vigilância em Saúde                                                                                 201308
+08Gestão do SUS                                                                                       201308

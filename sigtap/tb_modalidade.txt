@@ -1,0 +1,4 @@
+01Ambulatorial                                                                                        201308
+02Hospitalar                                                                                          201308
+03Hospital Dia                                                                                        201308
+06Atenção Domiciliar                                                                                  201308

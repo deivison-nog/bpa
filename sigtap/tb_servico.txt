@@ -1,0 +1,64 @@
+100Serviço de Atenção a Saúde no Sistema Penitenciário                                                                     201308
+101Estratégia de Saúde da Família                                                                                          201308
+102Estratégias de Agentes Comunitário de Saúde                                                                             201308
+103Serviço de Atendimento Móvel de Urgências                                                                               201308
+104Regulação Assistêncial dos Serviços de Saúde                                                                            201308
+105Serviço de Atenção em Neurologia/ Neurocirurgia                                                                         201308
+106Serviço de Atenção a DST/HIV/AIDS                                                                                       201308
+107Serviço de Atenção a Saúde Auditiva                                                                                     201308
+108Serviço de Atenção a Aaúde do Trabalhador                                                                               201308
+109Serviço de Atenção a Saúde dos Adolecentes em Conflito com a Lei, em Regime de Internação e Internação Provisória       201308
+110Serviço de Atenção a Saúde Reprodutiva                                                                                  201308
+111Serviço de Atenção ao Paciente com Tuberculose                                                                          201308
+112Serviço de Atenção ao Pré-Natal, Parto e Nascimento                                                                     201308
+113Serviço de Atenção Domiciliar                                                                                           201308
+114Serviço de Atenção em Saúde Bucal                                                                                       201308
+115Serviço de Atenção Psicossocial                                                                                         201308
+116Serviço de Atenção Cardiovascular/Cardiologia                                                                           201308
+117Serviço de Cirurgia Reparadora                                                                                          201308
+118Serviço de Cirurgia Torácica                                                                                            201308
+119Serviço de Controle de Tabagismo                                                                                        201308
+120Serviço de Diagnóstico por Anatomia Patológica e/ou Citopatologia                                                       201308
+121Serviço de Diagnóstico por Imagem                                                                                       201308
+122Serviço de Diagnóstico por Métodos Gráficos/Dinâmicos                                                                   201308
+123Serviço de Dispensação de Órteses, Próteses e Materiais Especiais                                                       201308
+124Serviço de Endocrinologia                                                                                               201308
+125Serviço de Farmácia                                                                                                     201308
+126Serviço de Fisioterapia                                                                                                 201308
+127Serviço de Atenção à Obesidade                                                                                          201308
+128Serviço de Hemoterapia                                                                                                  201308
+129Servico de Laboratório de Histocompatibilidade                                                                          201308
+130Serviço de Nefrologia/Urologia                                                                                          201308
+131Serviço de Oftalmologia                                                                                                 201308
+132Serviço de Oncologia                                                                                                    201308
+133Serviço de Pneumologia                                                                                                  201308
+134Serviço de Práticas Integrativas e Complementares                                                                       201308
+135Serviço de Reabilitação                                                                                                 201308
+136Serviço de Suporte Nutricional                                                                                          201308
+137Serviço de Telemedicina                                                                                                 201308
+138Serviço de Traumato-Ortopedia                                                                                           201308
+139Serviço de Triagem Neonatal                                                                                             201308
+140Serviço de Urgência e Emergência                                                                                        201308
+141Serviço de Vigilância em Saúde                                                                                          201308
+142Serviço de Endoscopia                                                                                                   201308
+143Serviço Móvel de Urgência (exceto SAMU)                                                                                 201308
+144Serviço Posto de Coleta de Materiais Biológicos                                                                         201308
+145Serviço de Diagnóstico por Laboratório Clínico                                                                          201308
+146Serviço de Videolaparoscopia                                                                                            201308
+147Serviço de Apoio a Saúde da Família                                                                                     201308
+148Hospital-Dia                                                                                                            201308
+149Transplante                                                                                                             201308
+150Cirurgia Vascular                                                                                                       201308
+151Medicina Nuclear                                                                                                        201308
+153Atenção Especializada no Processo Transexualizador                                                                      201308
+154Serviço de Banco de Tecidos                                                                                             201308
+155Serviço de Traumatologia  Ortopedia                                                                                     201308
+156Serviço de Atenção á Saúde das Pessoas Ostomizadas                                                                      201308
+157Serviço de Laboratorio de Protese Dentaria                                                                              201308
+158Serviço de Atenção Integral em Hanseniase                                                                               201308
+159Atenção Básica                                                                                                          201308
+160Teleconsultoria                                                                                                         201308
+162Serviço de Terapia Intensiva                                                                                            201308
+163Serviço de Cuidados Intermediários                                                                                      201308
+164Serviço de Órteses,Próteses e Materiais Especiais em Reabilitação                                                       201308
+165Serviço de Atenção Integral Á Saúde de Pessoas em Situação de Violência Sexual                                          201308

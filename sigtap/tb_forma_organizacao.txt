@@ -1,0 +1,377 @@
+010101Educação em saúde                                                                                   201308
+010201Vigilancia sanitária                                                                                201308
+020101Coleta de material por meio de punção/biópsia                                                       201308
+020201Exames bioquimicos                                                                                  201308
+020301Exames citopatológicos                                                                              201308
+020401Exames radiológicos da cabeça e pescoço                                                             201308
+020501Ultra-sonografias do sistema circulatório (qualquer região anatômica)                               201308
+020601Tomografia da cabeça, pescoço e coluna vertebral                                                    201308
+020701RM da cabeça, pescoço e coluna vertebral                                                            201308
+020801Aparelho cardiovascular                                                                             201308
+020901Aparelho digestivo                                                                                  201308
+021001Exames radiológicos de vasos sangüíneos e linfáticos                                                201308
+021101Diagnóstico em angiologia                                                                           201308
+021201Exames do doador/receptor                                                                           201308
+021301Exames relacionados a doenças e agravos de notificação compulsória                                  201308
+021401Teste realizado fora da estrutura de laboratório                                                    201308
+030101Consultas médicas/outros profissionais  de nivel superior                                           201308
+030201Assistência fisioterapêutica em alterações obstétricas, neonatais e uroginecológicas                201308
+030301Tratamento de doenças infecciosas e parasitárias                                                    201308
+030401Radioterapia                                                                                        201308
+030501Tratamento dialítico                                                                                201308
+030601Procedimentos destinados a obtenção do sangue para fins de assistência hemoterapica                 201308
+030701Dentística                                                                                          201308
+030801Traumatismos                                                                                        201308
+030901Terapia nutricional                                                                                 201308
+031001Parto e nascimento                                                                                  201308
+040101Pequenas cirurgias                                                                                  201308
+040201Cirurgia de tireóide e paratireóide                                                                 201308
+040301Trauma e anomalias do desenvolvimento                                                               201308
+040401Cirurgia das vias aéreas superiores e do pescoço                                                    201308
+040501Palpebras e vias lacrimais                                                                          201308
+040601Cirurgia cardiovascular                                                                             201308
+040701Esôfago, estômago e duodeno                                                                         201308
+040801Cintura escapular                                                                                   201308
+040901Rim, ureter e bexiga                                                                                201308
+041001Mama                                                                                                201308
+041101Parto                                                                                               201308
+041201Traqueia e brônquios                                                                                201308
+041301Tratamento de queimados                                                                             201308
+041401Buco-maxilo-facial                                                                                  201308
+041501Múltiplas                                                                                           201308
+041601Urologia                                                                                            201308
+041701Anestesias                                                                                          201308
+041801Acessos para dialise                                                                                201308
+050101Coleta e exames para identificação de doador de células-tronco hematopoéticas (busca nacional)      201308
+050201Avaliação clínica de morte encefálica                                                               201308
+050301Ações relacionadas a doação de orgãos e tecidos para transpalnte                                    201308
+050401Processamento de córnea/esclera                                                                     201308
+050501Transplante de tecidos e células                                                                    201308
+050601Acompanhamento de paciente no pré e pós-transplante                                                 201308
+060101Agentes anticitocinas                                                                               201308
+060201Procoagulantes em coagulopatias hereditárias                                                        201308
+060301Antiinflamatórios                                                                                   201308
+060401Acido Aminosalicilico e Similares                                                                   201308
+070101OPM auxiliares da locomoção                                                                         201308
+070201OPM em neurocirurgia                                                                                201308
+080101Incentivos                                                                                          201308
+080201Diárias                                                                                             201308
+080301Deslocamento/Ajuda de custo                                                                         201308
+080202Outras ações                                                                                        201308
+030302Tratamento de doenças do sangue, orgãos hematopoéticos e alguns transtornos imunitários             201308
+041502Sequenciais                                                                                         201308
+041602Sistema linfático                                                                                   201308
+041802Intervençõess cirúrgicas em acessos para diálise                                                    201308
+050102Exames de histocompatibilidade para identificação de receptor de células-tronco hematopoéticas      201308
+050302Cirurgias para transplante - doador vivo                                                            201308
+050402Processamento de tecido ósteo-fascio-condro-ligamentoso humano                                      201308
+050502Transplante de orgãos                                                                               201308
+050602Intercorrência pós transplante                                                                      201308
+060102Antagonista do glutamato                                                                            201308
+060302Imunossupressores                                                                                   201308
+060402Agentes Quelantes de Ferro                                                                          201308
+070102OPM ortopédicas                                                                                     201308
+070202OPM em cirurgia buco-maxilo-facial                                                                  201308
+030402Quimioterapia paliativa - adulto                                                                    201308
+030502Tratamento em nefrologia em geral                                                                   201308
+030602Medicina transfusional                                                                              201308
+030702Endodontia                                                                                          201308
+030802Intoxicações e envenenamentos                                                                       201308
+030902Terapias em doenças alérgicas                                                                       201308
+040102Cirurgias de pele, tecido subcutâneo e mucosa                                                       201308
+040202Cirurgia da suprarrenal                                                                             201308
+040302Coluna e nervos periféricos                                                                         201308
+040402Cirurgia da face e do sistema estomatognático                                                       201308
+040502Músculos oculomotores                                                                               201308
+040602Cirurgia vascular                                                                                   201308
+040702Intestinos , reto e anus                                                                            201308
+040802Membros superiores                                                                                  201308
+040902Uretra                                                                                              201308
+041102Outras cirurgias relacionadas com o estado gestacional                                              201308
+041202Mediastino                                                                                          201308
+041302Reparadora em oncológica                                                                            201308
+010102Saúde bucal                                                                                         201308
+020102Outras formas de coleta de material                                                                 201308
+020202Exames hematológicos e hemostasia                                                                   201308
+020302Exames anatomopatológicos                                                                           201308
+020402Exames radiológicos da coluna vertebral                                                             201308
+020502Ultra-sonografias dos demais sistemas                                                               201308
+020602Tomografia do torax e membros superiores                                                            201308
+020702RM do torax e membros superiores                                                                    201308
+020802Aparelho digestivo                                                                                  201308
+020902Aparelho urinário                                                                                   201308
+021002Vias biliares                                                                                       201308
+021102Diagnóstico em cardiologia                                                                          201308
+021202Procedimentos especiais em hemoterápica                                                             201308
+021302Exames relacionados ao meio ambiente                                                                201308
+030102Atendimento/Acompanhamento em saúde do trabalhador                                                  201308
+030202Assistência fisioterapêutica em alterações oncológicas                                              201308
+041402Cirurgia oral                                                                                       201308
+041503Politraumatizados                                                                                   201308
+030303Tratamento de doenças endocrinas, metabólicas e nutricionais                                        201308
+050103Coleta e exames para ident. de doador de célula-tronco hematopoéticas (busca internacional/nacional)201308
+050303Manutenção e retirada de orgãos e tecidos para transplante                                          201308
+050403Processamento de válvula/tubo valvado cardíaco humano                                               201308
+060103Antianêmicos não hormonais                                                                          201308
+060303Imunoterápicos                                                                                      201308
+060403Agonistas da Dopamina/inibidor da prolactina                                                        201308
+070103OPM auditivas                                                                                       201308
+070203OPM em ortopedia                                                                                    201308
+030403Quimioterapia para controle temporário de doença - adulto                                           201308
+030703Periodontia clínica                                                                                 201308
+030803Outras consequências de causas externas                                                             201308
+030903Terapias do aparelho geniturinário                                                                  201308
+040303Tumores do sistema nervoso                                                                          201308
+040403Anomalia Crânio e bucomaxilo facial                                                                 201308
+040503Corpo vítreo, retina, coróide e esclera                                                             201308
+040603Cardiologia intervencionista                                                                        201308
+040703Pancreas, baco, figado e vias biliares                                                              201308
+040803Coluna vertebral e caixa torácica                                                                   201308
+040903Próstata e vesicula seminal                                                                         201308
+041203Pleura                                                                                              201308
+041303Reparadora para lipodistrofia                                                                       201308
+010103Visita domiciliar                                                                                   201308
+020203Exames sorológicos e imunológicos                                                                   201308
+020403Exames radiológicos do torax e mediastino                                                           201308
+020603Tomografia do abdomen, pelve e membros inferiores                                                   201308
+020703RM do abdomen, pelve e membros inferiores                                                           201308
+020803Aparelho endócrino                                                                                  201308
+020903Aparelho ginecológico                                                                               201308
+021103Diagnóstico cinético funcional                                                                      201308
+030103Atendimento pré-hospitalar de urgência                                                              201308
+030203Assistência fisioterapêutica em oftalmologia                                                        201308
+041603Cabeça e pescoço                                                                                    201308
+041304Outras cirurgias plásticas/reparadoras                                                              201308
+030304Tratamento de doenças do sistema nervoso central e periférico                                       201308
+041604Esôfago-gastro duodenal e vísceras anexas e outros orgãos intra-abdominais                          201308
+050104Exames imunogenéticos/histocompatibilidade para identificação de doador de orgãos                   201308
+050304Açõess complementares destinadas a doação de orgãos, tecidos e células.                             201308
+050404Processamento de pele humana                                                                        201308
+060104Antianêmicos hormonais                                                                              201308
+060304Reguladores de atividade hormonal - inibidores da prolactina                                        201308
+060404Agonistas seletivos dos receptores beta 2 adrenérgicos                                              201308
+070104OPM oftalmológicas                                                                                  201308
+070204OPM em assistência cardiovascular                                                                   201308
+030404Quimioterapia prévia (neoadjuvante/citorredutora)- adulto                                           201308
+030704Moldagem/Manutenção                                                                                 201308
+030804Complicações consequentes a procedimentos em saúde                                                  201308
+030904Terapias do aparelho cardiovascular                                                                 201308
+040304Neurocirurgias vasculares                                                                           201308
+040504Cavidade orbitária e globo ocular                                                                   201308
+040604Cirurgia endovascular                                                                               201308
+040704Parede e cavidade abdominal                                                                         201308
+040804Cintura pélvica                                                                                     201308
+040904Bolsa escrotal, testículos e cordão espermático                                                     201308
+041204Parede torácica                                                                                     201308
+010104Alimentação e nutrição                                                                              201308
+020204Exames coprológicos                                                                                 201308
+020404Exames radiológicos da cintura escapular e dos membros superiores                                   201308
+020804Aparelho geniturinário                                                                              201308
+020904Aparelho respiratório                                                                               201308
+021104Diagnóstico em ginecologia-obstetrícia                                                              201308
+030104Outros atendimentos realizados por profissionais de níveis superior                                 201308
+030204Assistência fisioterapêutica cardiovasculares e pneumo-funcionais                                   201308
+041504Procedimentos cirúrgicos gerais                                                                     201308
+041605Colo-proctologia                                                                                    201308
+050105Exames imunogenéticos/histocompatibilidade para identificação de receptor de orgãos                 201308
+060105Antiasmáticos                                                                                       201308
+060305Antitrombóticos                                                                                     201308
+060405Alcalóides naturais do ópio                                                                         201308
+070105OPM em gastroenterologia                                                                            201308
+070205OPM comuns                                                                                          201308
+030405Quimioterapia adjuvante (profilática) - adulto                                                      201308
+030905Práticas integrativas e complementares                                                              201308
+040305Tratamento neurocirúrgico da dor funcional                                                          201308
+040505Conjuntiva, córnea, câmara anterior, íris, corpo ciliar e cristalino                                201308
+040605Eletrofisiologia                                                                                    201308
+040805Membros inferiores                                                                                  201308
+040905Pênis                                                                                               201308
+041205Pulmão                                                                                              201308
+020205Exames de uroanálise                                                                                201308
+020405Exames radiológicos do abdomen e pelve                                                              201308
+020805Aparelho esquelético                                                                                201308
+021105Diagnóstico em neurologia                                                                           201308
+030105Atenção domiciliar                                                                                  201308
+030205Assistência fisioterapêutica nas disfunções musculo esqueleticas (todas as origens)                 201308
+030305Tratamento de doenças do aparelho da visão                                                          201308
+030406Quimioterapia curativa - adulto                                                                     201308
+060406Alimentos dietéticos isentos de fenilalanina                                                        201308
+070106OPM em urologia                                                                                     201308
+030906Acessos venosos                                                                                     201308
+040306Investigação e cirurgia da epilepsia                                                                201308
+041606Ginecologia                                                                                         201308
+021106Diagnóstico em oftalmologia                                                                         201308
+020806Aparelho nervoso                                                                                    201308
+050106Exames gráficos ou por imagem para diagnóstico de morte encefálica                                  201308
+030306Tratamento de doenças cardiovasculares                                                              201308
+020406Exames radiológicos da cintura pélvica e dos membros inferiores                                     201308
+060106Antibióticos                                                                                        201308
+030206Assistência fisioterapêutica nas alterações em neurologia                                           201308
+020206Exames hormonais                                                                                    201308
+040906Útero e anexos                                                                                      201308
+060306Tensiolítico alveolar                                                                               201308
+030106Consulta/Atendimento ás urgências (em geral)                                                        201308
+040806Gerais                                                                                              201308
+070206OPM em urologia                                                                                     201308
+070107OPM em odontologia                                                                                  201308
+060407Aminas Terciárias                                                                                   201308
+060307Hemoderivados                                                                                       201308
+060107Antiepiléticos                                                                                      201308
+050107Outros exames complementares para doação de orgãos, tecidos e células                               201308
+041607Oftalmologia                                                                                        201308
+070207OPM em cirurgias oftálmicas                                                                         201308
+030207Assistência fisioterapêutica em queimados                                                           201308
+030107Atendimento/acompanhamento em reabilitação física, mental, visual e múltiplas deficiências          201308
+021107Diagnóstico em otorrinolaringologia/fonoaudiologia                                                  201308
+020807Aparelho respiratório                                                                               201308
+020207Exames toxicológicos ou de monitorização terapêutica                                                201308
+040907Vagina, vulva e períneo                                                                             201308
+040307Tratamento neuro-endovascular                                                                       201308
+030407Quimioterapia de tumores de crianca e adolescente                                                   201308
+030307Tratamento de doenças do aparelho digestivo                                                         201308
+040308Neurocirurgia funcional estereotáxica                                                               201308
+030308Tratamento de doenças da pele e do tecido  subcutâneo                                               201308
+070108OPM de anomalias buco-maxilo-facial                                                                 201308
+021108Diagnóstico em pneumologia                                                                          201308
+030408Quimioterapia - procedimentos especiais                                                             201308
+060408Aminoquinolinas                                                                                     201308
+041608Pele e cirurgia plástica                                                                            201308
+020808Aparelho hematológico                                                                               201308
+030108Atendimento/Acompanhamento psicossocial                                                             201308
+050108Exames complementares para pacientes transplantados                                                 201308
+020208Exames microbiológicos                                                                              201308
+060308Medicamentos para transplante                                                                       201308
+060108Antiinflamatórios                                                                                   201308
+070208OPM em cirurgia plástica/reparadora                                                                 201308
+041609Ossos e partes moles                                                                                201308
+030309Tratamento de doenças do sistema osteomuscular e do tecido conjuntivo                               201308
+020209Exames em outros líquidos biológicos                                                                201308
+030109Atendimento/Acompanhamento em saúde do idoso                                                        201308
+020809Outros métodos de diagnóstico em medicina nuclear in vivo                                           201308
+021109Diagnóstico em urologia                                                                             201308
+070209OPM em cirurgia de otorrinolaringologia                                                             201308
+060109Antiinflamatórios intestinais                                                                       201308
+060409Análogos da mostarda nitrogenada                                                                    201308
+070109Substituição/Troca em órteses/próteses                                                              201308
+030409Medicina nuclear - terapêutica oncológica                                                           201308
+030410Gerais em oncologia                                                                                 201308
+070110OPM em queimados                                                                                    201308
+030310Tratamento durante a gestação, parto e puerpério                                                    201308
+021110Diagnóstico em psicologia-psiquiatria                                                               201308
+041610Neurocirurgia                                                                                       201308
+060410Vasopressina e Análogos                                                                             201308
+030110Atendimentos de enfermagem (em geral)                                                               201308
+070210OPM em nefrologia                                                                                   201308
+060110Antiparkinsonianos                                                                                  201308
+020210Exames de genética                                                                                  201308
+030311Tratamento de malformações congênitas, deformidades e anomalias cromossômicas                       201308
+030111Atendimento/Acompanhamento queimados                                                                201308
+021111Diagnóstico em cardiologia intervencionista                                                         201308
+020211Exames para triagem neonatal                                                                        201308
+070211OPM em queimados                                                                                    201308
+060411Análogos do hormônio liberador de gonadotrofina                                                     201308
+060111Antipsicóticos                                                                                      201308
+041611Cirurgia torácica                                                                                   201308
+021112Diagnóstico em traumato-ortopedia                                                                   201308
+030112Atendimento/acompanhamento de diagnóstico de doenças endocrinas/metabolicas e nutricionais          201308
+070212OPM para transplantes                                                                               201308
+060412Antiandrogênios                                                                                     201308
+060112Antivirais                                                                                          201308
+020212Exames imunohematológicos                                                                           201308
+041612Mastologia                                                                                          201308
+030312Tratamentos por medicina nuclear in vivo                                                            201308
+030313Tratamento de pacientes sob cuidados prolongados                                                    201308
+041613Otorrinolaringologia                                                                                201308
+060113Bloqueadores neuromusculares                                                                        201308
+030113Acompanhamento em outras especialidades                                                             201308
+060413Anticolinesterases                                                                                  201308
+060114Ceratolíticos sistêmicos                                                                            201308
+060414Antigonadotrofinas e agentes similares                                                              201308
+030314Tratamento de doenças do ouvido/apófise mastóide e vias aéreas                                      201308
+030315Tratamento das doenças do aparelho geniturinário                                                    201308
+060115Complementos alimentares para fenilcetonúricos                                                      201308
+060415Barbitúricos e derivados                                                                            201308
+060116Fatores de crescimento mielóides                                                                    201308
+060416Bisfosfonados                                                                                       201308
+030316Tratamento de algumas afecçõess originadas no período neonatal                                      201308
+060417Compostos de Alumínio                                                                               201308
+030317Tratamento dos transtornos mentais e comportamentais                                                201308
+060117Hipnoanalgésicos                                                                                    201308
+060418Derivados da benzodiazepina                                                                         201308
+030318Tratamento HIV/Aids                                                                                 201308
+060118Hipolipemiantes                                                                                     201308
+060419Derivados de ácidos graxos                                                                          201308
+030319Reabilitação                                                                                        201308
+060119Imunomoduladores                                                                                    201308
+060120Imunossupressores                                                                                   201308
+060420Derivados do adamantano                                                                             201308
+060121Imunoterapicos                                                                                      201308
+060421Derivados do indol                                                                                  201308
+060122Inibidores da acetilcolinesterase                                                                   201308
+060422Derivados da succinimida                                                                            201308
+060123Mucolíticos                                                                                         201308
+060423Diazepinas, oxazepinas e tiazepinas                                                                 201308
+060124Quelantes do ferro                                                                                  201308
+060424 Enzimas                                                                                            201308
+060125Outros quelantes                                                                                    201308
+060425Fatores de estimulação de colônias                                                                  201308
+060126Reguladores da atividade hormonal-agonistas da vasopressina                                         201308
+060426Ferro trivalente, preparações parenterais                                                           201308
+060127Reguladores da atividade hormonal-analogos do GNRH                                                  201308
+060427Fibratos, Acido Nicotínico e seus derivados                                                         201308
+060128Reguladores da atividade hormonal-antiandrogênicos                                                  201308
+060428Glicocorticóides                                                                                    201308
+060429Somatostatina e Análogos                                                                            201308
+060129Reguladores da atividade hormonal-inibidores das gonadotrofinas                                     201308
+060130Reguladores da atividade hormonal-inibidores do hormônio do crescimento                             201308
+060430 Imunoglobulinas específicas                                                                        201308
+060131Reguladores da atividade hormonal-inibidores de prolactina                                          201308
+060431Imunoglobulinas, humana normal                                                                      201308
+060132Reguladores da atividade hormonal-hormonios de crescimento                                          201308
+060432Imunossupressores seletivos                                                                         201308
+060433Inibidores da agregação plaquetária, excl. heparina                                                 201308
+060133Reguladores da atividade hormonal-hormonios tireoidianos                                            201308
+060134Reguladores da atividade hormonal-mineralocorticóides                                               201308
+060434Inibidores da calcineurina                                                                          201308
+060135Reguladores da homeostase do cálcio                                                                 201308
+060435Inibidores da fosfodiesterase                                                                       201308
+060136Repositores enzimáticos                                                                             201308
+060436Inibidores da HMG-CoA redutase                                                                      201308
+060437Inibidores da monoamino oxidase tipo b                                                              201308
+060438Inibidores do fator de necrose tumoral alfa (TNF-a)                                                 201308
+060439Interferonas                                                                                        201308
+060440Medicamentos para tratamento da hipercalemia e hiperfosfatemia                                      201308
+060441Medicamentos utilizados na dependência de opióides                                                  201308
+060442Mineralocorticóides                                                                                 201308
+060443Modulador seletivo de receptor de estrogênio                                                        201308
+060444Mucolíticos                                                                                         201308
+060445Nucleosídeo e nucleotídeo (excl. inibidores da transcriptase reversa)                               201308
+060446Nucleosídeo e nucleotídeo, Inibidor da transcriptase reversa                                        201308
+060447Outras preparações antianêmicas                                                                     201308
+060448Outros agentes citotóxicos                                                                          201308
+060449Outros agentes dopaminérgicos                                                                       201308
+060450Outros antiepilépticos                                                                              201308
+060451Outros antipsicóticos                                                                               201308
+060452Outros imunoestimulantes                                                                            201308
+060453Outros imunossupressores                                                                            201308
+060454Outros medicamentos do sistema nervoso                                                              201308
+060455Outros relaxantes musculares de ação periférica                                                     201308
+060456Penicilamina e agentes similares                                                                    201308
+060457Preparações de calcitonina                                                                          201308
+060458Preparações de enzimas                                                                              201308
+060459Retinóides para tratamento da acne                                                                  201308
+060460Retinóides para tratamento da psoríase                                                              201308
+060461Somatropina e agonistas da somatropina                                                              201308
+060462Vitamina D e análogos, incluido combinação dos dois                                                 201308
+060463Produtos diversos para o trato alimentar ou metabolismo                                             201308
+060464Inibidores de Protease                                                                              201308
+060465Análogos das Prostaglandinas                                                                        201308
+060466Inibidores da Anidrase Carbonica                                                                    201308
+060467Simpatomiméticos na Terapia de Glaucoma                                                             201308
+060468Anticorpos Monoclonais                                                                              201308
+060469Inibidores de Interleucinas                                                                         201308
+060470Outros Antipsoriaticos de Uso Tópico                                                                201308
+060471Corticoesteróides de Potência Muito Alta (Grupo IV)                                                 201308
+060472Derivados do Ácido Propriônico                                                                      201308
+060473Parassinpaticomiméticos                                                                             201308
+060474AgentesBeta Bloqueadores                                                                            201308
