@@ -17,6 +17,11 @@ function formatDate(?string $date): string
     return substr($date, 6, 2) . '/' . substr($date, 4, 2) . '/' . substr($date, 0, 4);
 }
 
+function formatCurrency(float $value): string
+{
+    return number_format($value, 2, ',', '.');
+}
+
 function normalizeLines(string $content): array
 {
     $lines = preg_split('/\r\n|\r|\n/', $content);
@@ -371,6 +376,108 @@ function applyFilters(array $records, array $filters): array
             return false;
         }
 
+        function parseSigtapMoney(string $raw): float
+        {
+            $digits = preg_replace('/\D/', '', $raw) ?? '0';
+            return ((int) $digits) / 100;
+        }
+
+        function loadSigtapProcedimentos(string $filePath): array
+        {
+            if (!is_file($filePath) || !is_readable($filePath)) {
+                return [];
+            }
+
+            $lines = @file($filePath, FILE_IGNORE_NEW_LINES);
+            if ($lines === false) {
+                return [];
+            }
+
+            $procedimentos = [];
+            foreach ($lines as $line) {
+                $line = rtrim((string)$line, "\r\n");
+                if (strlen($line) < 312) {
+                    continue;
+                }
+
+                $codigo = substr($line, 0, 10);
+                if ($codigo === '') {
+                    continue;
+                }
+
+                $nome = trim(substr($line, 10, 250));
+                $vlSh = parseSigtapMoney(substr($line, 282, 10));
+                $vlSa = parseSigtapMoney(substr($line, 292, 10));
+                $vlSp = parseSigtapMoney(substr($line, 302, 10));
+
+                $procedimentos[$codigo] = [
+                    'codigo' => $codigo,
+                    'nome' => $nome !== '' ? $nome : 'SEM DESCRIÇÃO',
+                    'valor_unitario' => $vlSh + $vlSa + $vlSp,
+                ];
+            }
+
+            return $procedimentos;
+        }
+
+        function summarizeBpaProcedimentosComValor(array $records02, array $records03, array $sigtapProcedimentos): array
+        {
+            $resumo = [];
+
+            foreach ($records02 as $record) {
+                $codigo = $record['procedimento'] ?? '';
+                if ($codigo === '') {
+                    continue;
+                }
+
+                if (!isset($resumo[$codigo])) {
+                    $info = $sigtapProcedimentos[$codigo] ?? null;
+                    $resumo[$codigo] = [
+                        'codigo' => $codigo,
+                        'nome' => $info['nome'] ?? 'NÃO ENCONTRADO NO SIGTAP',
+                        'quantidade' => 0,
+                        'valor_unitario' => (float)($info['valor_unitario'] ?? 0),
+                        'valor_total' => 0.0,
+                    ];
+                }
+
+                $resumo[$codigo]['quantidade'] += (int)($record['quantidade'] ?? 0);
+            }
+
+            foreach ($records03 as $record) {
+                $codigo = $record['procedimento'] ?? '';
+                if ($codigo === '') {
+                    continue;
+                }
+
+                if (!isset($resumo[$codigo])) {
+                    $info = $sigtapProcedimentos[$codigo] ?? null;
+                    $resumo[$codigo] = [
+                        'codigo' => $codigo,
+                        'nome' => $info['nome'] ?? 'NÃO ENCONTRADO NO SIGTAP',
+                        'quantidade' => 0,
+                        'valor_unitario' => (float)($info['valor_unitario'] ?? 0),
+                        'valor_total' => 0.0,
+                    ];
+                }
+
+                $resumo[$codigo]['quantidade'] += 1;
+            }
+
+            $totalGeral = 0.0;
+            foreach ($resumo as $codigo => $item) {
+                $resumo[$codigo]['valor_total'] = $item['quantidade'] * $item['valor_unitario'];
+                $totalGeral += $resumo[$codigo]['valor_total'];
+            }
+
+            uasort($resumo, static fn(array $a, array $b): int => $b['valor_total'] <=> $a['valor_total']);
+
+            return [
+                'itens' => array_values($resumo),
+                'total_geral' => $totalGeral,
+            ];
+        }
+
         if ($filters['competencia'] !== '' && (($record['competencia'] ?? '') !== $filters['competencia'])) {
             return false;
         }
@@ -431,6 +538,10 @@ $filters = [
 
 $filtered02 = $result ? applyFilters($result['records02'], $filters) : [];
 $filtered03 = $result ? applyFilters($result['records03'], $filters) : [];
+$sigtapProcedimentos = loadSigtapProcedimentos(__DIR__ . '/sigtap/tb_procedimento.txt');
+$resumoBpaComValores = $result
+    ? summarizeBpaProcedimentosComValor($result['records02'], $result['records03'], $sigtapProcedimentos)
+    : ['itens' => [], 'total_geral' => 0.0];
 
 $competencias = [];
 if ($result) {
@@ -535,6 +646,44 @@ if ($result) {
                         <button class="btn btn-success" type="submit">Filtrar</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white d-flex justify-content-between">
+                <strong>Resumo BPA por procedimento (SIGTAP)</strong>
+                <span class="text-muted">
+                    <?= count($resumoBpaComValores['itens']) ?> procedimento(s) |
+                    Total geral: <strong>R$ <?= h(formatCurrency((float)$resumoBpaComValores['total_geral'])) ?></strong>
+                </span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Código</th>
+                        <th>Procedimento</th>
+                        <th class="text-end">Quantidade</th>
+                        <th class="text-end">Valor unitário (R$)</th>
+                        <th class="text-end">Valor total (R$)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (empty($resumoBpaComValores['itens'])): ?>
+                        <tr><td colspan="5" class="text-center text-muted py-4">Nenhum procedimento encontrado para resumo de valores.</td></tr>
+                    <?php else: ?>
+                        <?php foreach ($resumoBpaComValores['itens'] as $item): ?>
+                            <tr class="mono">
+                                <td><?= h($item['codigo']) ?></td>
+                                <td><?= h($item['nome']) ?></td>
+                                <td class="text-end"><?= h((string)$item['quantidade']) ?></td>
+                                <td class="text-end"><?= h(formatCurrency((float)$item['valor_unitario'])) ?></td>
+                                <td class="text-end"><?= h(formatCurrency((float)$item['valor_total'])) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
             </div>
         </div>
 
