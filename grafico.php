@@ -23,6 +23,38 @@ function normalizeCns(string $value): string
     return is_string($normalized) ? $normalized : '';
 }
 
+function loadProcedimentosMap(string $path): array
+{
+    if (!is_file($path)) {
+        return [];
+    }
+
+    $map = [];
+    $handle = fopen($path, 'r');
+    if ($handle === false) {
+        return [];
+    }
+
+    while (($rawLine = fgets($handle)) !== false) {
+        $line = iconv('ISO-8859-1', 'UTF-8//IGNORE', $rawLine);
+        if ($line === false) {
+            continue;
+        }
+        $line = rtrim($line, "\r\n");
+        if (strlen($line) < 260) {
+            continue;
+        }
+        $code = substr($line, 0, 10);
+        $name = trim(substr($line, 10, 250));
+        if ($code !== '' && $name !== '') {
+            $map[$code] = $name;
+        }
+    }
+    fclose($handle);
+
+    return $map;
+}
+
 function loadProfissionaisMap(string $path): array
 {
     if (!is_file($path)) {
@@ -108,7 +140,8 @@ function extractRecord02Chart(string $line): ?array
 }
 
 $content = (string)($_SESSION['bpa_content'] ?? '');
-$profissionaisMap = loadProfissionaisMap(__DIR__ . '/profissionais.json');
+$profissionaisMap  = loadProfissionaisMap(__DIR__ . '/profissionais.json');
+$procedimentosMap  = loadProcedimentosMap(__DIR__ . '/sigtap/tb_procedimento.txt');
 $records03 = [];
 $records02 = [];
 
@@ -136,7 +169,9 @@ arsort($sexoCounts);
 // ── Gráfico 2: Procedimentos por código ─────────────────────────────────────
 $procCounts = [];
 foreach ($records03 as $r) {
-    $procCounts[$r['procedimento']] = ($procCounts[$r['procedimento']] ?? 0) + 1;
+    $code  = $r['procedimento'];
+    $label = isset($procedimentosMap[$code]) ? $procedimentosMap[$code] . " ($code)" : $code;
+    $procCounts[$label] = ($procCounts[$label] ?? 0) + 1;
 }
 arsort($procCounts);
 
@@ -167,7 +202,9 @@ arsort($racaCounts);
 // ── Gráfico 5: BPA consolidado por procedimento ──────────────────────────────
 $procConsolidadoCounts = [];
 foreach ($records02 as $r) {
-    $procConsolidadoCounts[$r['procedimento']] = ($procConsolidadoCounts[$r['procedimento']] ?? 0) + $r['quantidade'];
+    $code  = $r['procedimento'];
+    $label = isset($procedimentosMap[$code]) ? $procedimentosMap[$code] . " ($code)" : $code;
+    $procConsolidadoCounts[$label] = ($procConsolidadoCounts[$label] ?? 0) + $r['quantidade'];
 }
 arsort($procConsolidadoCounts);
 
