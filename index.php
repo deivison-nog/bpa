@@ -387,8 +387,11 @@ function loadSigtapProcedimentos(string $filePath): array
     }
 
     $procedimentos = [];
-    foreach ($lines as $line) {
-        $line = rtrim((string)$line, "\r\n");
+    foreach ($lines as $rawLine) {
+        $line = iconv('ISO-8859-1', 'UTF-8//IGNORE', rtrim((string)$rawLine, "\r\n"));
+        if ($line === false) {
+            continue;
+        }
         if (strlen($line) < 312) {
             continue;
         }
@@ -539,6 +542,28 @@ $filters = [
 $filtered02 = $result ? applyFilters($result['records02'], $filters) : [];
 $filtered03 = $result ? applyFilters($result['records03'], $filters) : [];
 $sigtapProcedimentos = loadSigtapProcedimentos(__DIR__ . '/sigtap/tb_procedimento.txt');
+
+// Merge supplemental procedures for codes absent from the base SIGTAP table
+$extraPath = __DIR__ . '/sigtap/procedimentos_extra.json';
+if (is_file($extraPath)) {
+    $extraContent = file_get_contents($extraPath);
+    if ($extraContent !== false) {
+        $extraData = json_decode($extraContent, true);
+        if (is_array($extraData)) {
+            foreach ($extraData as $item) {
+                $co = trim((string)($item['co'] ?? ''));
+                $no = trim((string)($item['no'] ?? ''));
+                if ($co !== '' && $no !== '' && !isset($sigtapProcedimentos[$co])) {
+                    $sigtapProcedimentos[$co] = [
+                        'codigo' => $co,
+                        'nome' => $no,
+                        'valor_unitario' => 0.0,
+                    ];
+                }
+            }
+        }
+    }
+}
 $resumoBpaComValores = $result
     ? summarizeBpaProcedimentosComValor($result['records02'], $result['records03'], $sigtapProcedimentos)
     : ['itens' => [], 'total_geral' => 0.0];
