@@ -412,10 +412,14 @@ function loadSigtapProcedimentos(string $filePath): array
         $vlSa = parseSigtapMoney(substr($raw, 292, 10));
         $vlSp = parseSigtapMoney(substr($raw, 302, 10));
 
+        // BPA is ambulatory billing: prioritize ambulatorial components (SA + SP)
+        // and only fall back to SH when ambulatory values are not available.
+        $valorUnitario = ($vlSa > 0 || $vlSp > 0) ? ($vlSa + $vlSp) : $vlSh;
+
         $procedimentos[$codigo] = [
             'codigo' => $codigo,
             'nome' => $nome !== '' ? $nome : 'SEM DESCRIÇÃO',
-            'valor_unitario' => $vlSh + $vlSa + $vlSp,
+            'valor_unitario' => $valorUnitario,
         ];
     }
     fclose($handle);
