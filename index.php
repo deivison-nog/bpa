@@ -381,30 +381,34 @@ function loadSigtapProcedimentos(string $filePath): array
         return [];
     }
 
-    $lines = @file($filePath, FILE_IGNORE_NEW_LINES);
-    if ($lines === false) {
+    // Read binary so byte offsets remain intact for the fixed-width numeric fields.
+    // Converting the whole line to UTF-8 first shifts offsets for procedures whose
+    // names contain accented characters (ISO-8859-1 single byte → UTF-8 multi-byte).
+    $handle = @fopen($filePath, 'rb');
+    if ($handle === false) {
         return [];
     }
 
     $procedimentos = [];
-    foreach ($lines as $rawLine) {
-        $line = iconv('ISO-8859-1', 'UTF-8//IGNORE', rtrim((string)$rawLine, "\r\n"));
-        if ($line === false) {
-            continue;
-        }
-        if (strlen($line) < 312) {
+    while (($rawLine = fgets($handle)) !== false) {
+        $raw = rtrim($rawLine, "\r\n");
+        if (strlen($raw) < 312) {
             continue;
         }
 
-        $codigo = substr($line, 0, 10);
-        if ($codigo === '') {
+        $codigo = substr($raw, 0, 10);
+        if (trim($codigo) === '') {
             continue;
         }
 
-        $nome = trim(substr($line, 10, 250));
-        $vlSh = parseSigtapMoney(substr($line, 282, 10));
-        $vlSa = parseSigtapMoney(substr($line, 292, 10));
-        $vlSp = parseSigtapMoney(substr($line, 302, 10));
+        // Convert only the name field from ISO-8859-1 to UTF-8.
+        $nomeIso = trim(substr($raw, 10, 250));
+        $nome = (string) iconv('ISO-8859-1', 'UTF-8//IGNORE', $nomeIso);
+
+        // Extract monetary values from the fixed-width positions in raw (binary) bytes.
+        $vlSh = parseSigtapMoney(substr($raw, 282, 10));
+        $vlSa = parseSigtapMoney(substr($raw, 292, 10));
+        $vlSp = parseSigtapMoney(substr($raw, 302, 10));
 
         $procedimentos[$codigo] = [
             'codigo' => $codigo,
@@ -412,6 +416,8 @@ function loadSigtapProcedimentos(string $filePath): array
             'valor_unitario' => $vlSh + $vlSa + $vlSp,
         ];
     }
+    fclose($handle);
+
 
     return $procedimentos;
 }
