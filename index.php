@@ -310,6 +310,7 @@ function parseBpaContent(string $content): array
             'comments' => 0,
             '01' => 0,
             '02' => 0,
+            '02_qty' => 0,
             '03' => 0,
             'XX' => 0,
         ],
@@ -345,7 +346,8 @@ function parseBpaContent(string $content): array
             $parsed['line_number'] = $lineNumber;
             $result['records02'][] = $parsed;
             $result['summary']['02']++;
-            $result['summary']['total']++;
+            $result['summary']['02_qty'] += $parsed['quantidade'];
+            $result['summary']['total'] += $parsed['quantidade'];
             continue;
         }
 
@@ -628,7 +630,7 @@ if ($result) {
         <div class="row g-3 mb-4">
             <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">Total</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['total'] ?></div></div></div></div>
             <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">01</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['01'] ?></div></div></div></div>
-            <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">02</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['02'] ?></div></div></div></div>
+            <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">02</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['02_qty'] ?></div></div></div></div>
             <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">03</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['03'] ?></div></div></div></div>
             <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">Comentários</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['comments'] ?></div></div></div></div>
             <div class="col-md-2"><div class="card"><div class="card-body text-center"><div class="text-muted">Inválidos</div><div class="fs-3 fw-bold"><?= (int)$result['summary']['XX'] ?></div></div></div></div>
