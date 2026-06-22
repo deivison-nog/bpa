@@ -242,7 +242,8 @@ $total02 = array_sum(array_column($records02, 'quantidade'));
 // Helper: encode array for Chart.js JSON
 function jsonLabels(array $data): string
 {
-    $json = json_encode(array_keys($data), JSON_UNESCAPED_UNICODE);
+    $keys = array_map(fn($k) => (string) $k, array_keys($data));
+    $json = json_encode($keys, JSON_UNESCAPED_UNICODE);
     return $json === false ? '[]' : $json;
 }
 function jsonValues(array $data): string
