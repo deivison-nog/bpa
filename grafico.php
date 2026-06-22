@@ -25,28 +25,30 @@ function normalizeCns(string $value): string
 
 function loadProcedimentosMap(string $path): array
 {
-    if (!is_file($path)) {
+    if (!is_file($path) || !is_readable($path)) {
         return [];
     }
 
     $map = [];
-    $handle = fopen($path, 'r');
+    $handle = fopen($path, 'rb');
     if ($handle === false) {
         return [];
     }
 
     while (($rawLine = fgets($handle)) !== false) {
-        $line = iconv('ISO-8859-1', 'UTF-8//IGNORE', $rawLine);
-        if ($line === false) {
+        $raw = rtrim($rawLine, "\r\n");
+        if (strlen($raw) < 260) {
             continue;
         }
-        $line = rtrim($line, "\r\n");
-        if (strlen($line) < 260) {
+
+        $code = substr($raw, 0, 10);
+        if (trim($code) === '') {
             continue;
         }
-        $code = substr($line, 0, 10);
-        $name = trim(substr($line, 10, 250));
-        if ($code !== '' && $name !== '') {
+
+        $nameIso = trim(substr($raw, 10, 250));
+        $name = (string) iconv('ISO-8859-1', 'UTF-8//IGNORE', $nameIso);
+        if ($name !== '') {
             $map[$code] = $name;
         }
     }
@@ -240,11 +242,14 @@ $total02 = array_sum(array_column($records02, 'quantidade'));
 // Helper: encode array for Chart.js JSON
 function jsonLabels(array $data): string
 {
-    return json_encode(array_keys($data), JSON_UNESCAPED_UNICODE);
+    $json = json_encode(array_keys($data), JSON_UNESCAPED_UNICODE);
+    return $json === false ? '[]' : $json;
 }
 function jsonValues(array $data): string
 {
-    return json_encode(array_values($data));
+    $values = array_map(static fn($value): int => (int) $value, array_values($data));
+    $json = json_encode($values);
+    return $json === false ? '[]' : $json;
 }
 
 $pieColors = [
@@ -254,10 +259,16 @@ $pieColors = [
 function jsonColors(int $count, array $palette): string
 {
     $colors = [];
+    if ($count <= 0 || count($palette) === 0) {
+        return '[]';
+    }
+
     for ($i = 0; $i < $count; $i++) {
         $colors[] = $palette[$i % count($palette)];
     }
-    return json_encode($colors);
+
+    $json = json_encode($colors);
+    return $json === false ? '[]' : $json;
 }
 ?>
 <!doctype html>
@@ -369,9 +380,11 @@ function jsonColors(int $count, array $palette): string
             tooltip: {
                 callbacks: {
                     label: (ctx) => {
-                        const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
-                        const pct = total > 0 ? ((ctx.parsed / total) * 100).toFixed(1) : 0;
-                        return ` ${ctx.label}: ${ctx.parsed} (${pct}%)`;
+                        const dataset = Array.isArray(ctx?.dataset?.data) ? ctx.dataset.data : [];
+                        const total = dataset.reduce((a, b) => a + Number(b || 0), 0);
+                        const value = Number(ctx.parsed || 0);
+                        const pct = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
+                        return ` ${ctx.label}: ${value} (${pct}%)`;
                     }
                 }
             }
