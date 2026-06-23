@@ -1,0 +1,59 @@
+0301Consultas / Atendimentos / Acompanhamentos                                                          201308
+0801Ações relacionadas ao estabelecimento                                                               201308
+0201Coleta de material                                                                                  201308
+0101Ações coletivas/individuais em saúde                                                                201308
+0701Órteses, próteses e materiais especiais não relacionados ao ato cirúrgico                           201308
+0601Medicamentos de dispensação excepcional                                                             201308
+0501Coleta e exames para fins de doação de orgãos, tecidos e células e de transplante                   201308
+0401Pequenas cirurgias e cirurgias de pele, tecido subcutâneo e mucosa                                  201308
+0202Diagnóstico em laboratório clínico                                                                  201308
+0102Vigilância em saúde                                                                                 201308
+0802Ações relacionadas ao atendimento                                                                   201308
+0702Órteses, próteses e materiais especiais relacionados ao ato cirúrgico                               201308
+0602Medicamentos estratégicos                                                                           201308
+0502Avaliação de morte encefálica                                                                       201308
+0402Cirurgia de glândulas endócrinas                                                                    201308
+0302Fisioterapia                                                                                        201308
+0203Diagnóstico por anatomia patológica e citopatologia                                                 201308
+0803Autorização / Regulação                                                                             201308
+0603Medicamentos de âmbito hospitalar                                                                   201308
+0403Cirurgia do sistema nervoso central e periférico                                                    201308
+0303Tratamentos clínicos (outras especialidades)                                                        201308
+0503Ações relacionadas à doação de orgãos e tecidos para transplante                                    201308
+0504Processamento de tecidos para transplante                                                           201308
+0404Cirurgia das vias aéreas superiores, da face, da cabeça e do pescoço                                201308
+0204Diagnóstico por radiologia                                                                          201308
+0604Componente Especializado da Assitencia Farmaceutica                                                 201308
+0304Tratamento em oncologia                                                                             201308
+0305Tratamento em nefrologia                                                                            201308
+0405Cirurgia do aparelho da visão                                                                       201308
+0205Diagnóstico por ultra-sonografia                                                                    201308
+0505Transplante de orgãos, tecidos e células                                                            201308
+0506Acompanhamento e intercorrências no pré e pós-transplante                                           201308
+0206Diagnóstico por tomografia                                                                          201308
+0406Cirurgia do aparelho circulatório                                                                   201308
+0306Hemoterapia                                                                                         201308
+0307Tratamentos odontológicos                                                                           201308
+0207Diagnóstico por ressonância magnética                                                               201308
+0407Cirurgia do aparelho digestivo, orgãos anexos e parede abdominal                                    201308
+0208Diagnóstico por medicina nuclear in vivo                                                            201308
+0308Tratamento de lesões, envenenamentos e outros, decorrentes de causas externas                       201308
+0408Cirurgia do sistema osteomuscular                                                                   201308
+0409Cirurgia do aparelho geniturinário                                                                  201308
+0309Terapias especializadas                                                                             201308
+0209Diagnóstico por endoscopia                                                                          201308
+0410Cirurgia de mama                                                                                    201308
+0310Parto e nascimento                                                                                  201308
+0210Diagnóstico por radiologia intervencionista                                                         201308
+0411Cirurgia obstétrica                                                                                 201308
+0211Métodos diagnósticos em especialidades                                                              201308
+0412Cirurgia torácica                                                                                   201308
+0212Diagnóstico e procedimentos especiais em hemoterapia                                                201308
+0213Diagnóstico em vigilância epidemiológica e ambiental                                                201308
+0413Cirurgia reparadora                                                                                 201308
+0414Bucomaxilofacial                                                                                    201308
+0214Diagnóstico por teste rápido                                                                        201308
+0415Outras cirurgias                                                                                    201308
+0416Cirurgia em oncologia                                                                               201308
+0417Anestesiologia                                                                                      201308
+0418Cirurgia em nefrologia                                                                              201308

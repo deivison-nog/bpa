@@ -1,0 +1,9 @@
+01BPA (Consolidado)                                 201308
+02BPA (Individualizado)                             201308
+03AIH (Proc. Principal)                             201308
+04AIH (Proc. Especial)                              201308
+05AIH (Proc. Secundário)                            201308
+06APAC (Proc. Principal)                            201308
+07APAC (Proc. Secundário)                           201308
+08RAAS (Atenção Domiciliar)                         201308
+09RAAS (Atenção Psicossocial)                       201308

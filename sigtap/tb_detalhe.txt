@@ -1,0 +1,37 @@
+001Inclui valor da anestesia                                                                           201308
+003Admite longa permanência                                                                            201308
+004Admite permanência à maior                                                                          201308
+005Admite liberação de quantidade na AIH                                                               201308
+006CNRAC                                                                                               201308
+007Permanência por dia                                                                                 201308
+008Não permite mudança de procedimento                                                                 201308
+009Exige CNS                                                                                           201308
+010Exige VDRL na AIH                                                                                   201308
+011Permite alta direta de UTI                                                                          201308
+012Exige idade no BPA (Consolidado)                                                                    201308
+013Verifica habilitação de terceiro                                                                    201308
+014Admite APAC de Continuidade                                                                         201308
+015Admitido apenas em Hosp.Espec/Psiquiatria                                                           201308
+016Admitido apenas em Hospital Geral                                                                   201308
+017Exige Informação da OPM                                                                             201308
+019Projeto Olhar Brasil                                                                                201308
+020Monitoramento do CEO                                                                                201308
+021Não Exige CBO                                                                                       201308
+022Exige registro na APAC de dados complementares                                                      201308
+023Registro no SISCOLO                                                                                 201308
+024Registro no SISPRENATAL                                                                             201308
+025Registro no SISMAMA                                                                                 201308
+026Registro de Procedimentos Secundário Compativel                                                     201308
+027Identificação de  Cirg. Cardiovasculares Pediátricas                                                201308
+029Admite período maior para a apresentação                                                            201308
+030Cirurgias Eletivas - Componente I                                                                   201308
+031Cirurgias Eletivas - Componente II                                                                  201308
+032Cirurgias Eletivas - Componente III                                                                 201308
+033APAC com validade fixa de 03 competências                                                           201308
+034Não exige CNS                                                                                       201308
+035Condicionado a Regras Especificas                                                                   201308
+036Exige Autorização                                                                                   201308
+037Exige CNPJ do Fornecedor                                                                            201308
+038Exige Serviço/Classificação                                                                         201308
+039Permitido em AIH com mais de um Procedimento Principal                                              201308
+040Registro no SISCAN                                                                                  201308

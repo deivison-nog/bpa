@@ -1,0 +1,55 @@
+040001Coleta de material                                                                                  201308
+040002Diagnóstico em laboratório clínico                                                                  201308
+040003Coleta/exame anátomo-patológico colo uterino                                                        201308
+040004Diagnóstico em neurologia                                                                           201308
+040005Diagnóstico em otorrinolaringologia/fonoaudiologia                                                  201308
+040006Diagnóstico em psicologia/psiquiatria                                                               201308
+040007Consultas médicas/outros profissionais de nível superior                                            201308
+040008Atenção domiciliar                                                                                  201308
+040009Atendimento/acompanhamento em reabilitação física, mental, visual, auditiva e múltiplas deficiências201308
+040010Atendimento/acompanhamento psicossocial                                                             201308
+040011Atendimento/acompanhamento em saúde do idoso                                                        201308
+040012Atendimento/acompanhamento de queimados                                                             201308
+040013Atendimento/acompanhamento de diagnóstico de doenças endocrinas/metabólicas e nutricionais          201308
+040014Tratamento de doenças do sistema nervoso central e periférico                                       201308
+040015Tratamento de doenças do aparelho da visão                                                          201308
+040016Tratamento em oncologia                                                                             201308
+040017Nefrologia                                                                                          201308
+040018Tratamentos odontológicos                                                                           201308
+040019Cirurgia do sistema nervoso central e periférico                                                    201308
+040020Cirurgias de ouvido, nariz e garganta                                                               201308
+040021Deformidade labio-palatal e crânio-facial                                                           201308
+040022Cirurgia do aparelho da visão                                                                       201308
+040023Cirurgia do aparelho circulatório                                                                   201308
+040024Cirurgia do aparelho digestivo, orgãos anexos e parede abdominal                                    201308
+040025Cirurgia do aparelho geniturinário                                                                  201308
+040026Tratamento de queimados                                                                             201308
+040027Cirurgia reparadora para lipodistrofia                                                              201308
+040028Outras cirurgias plásticas/reparadoras                                                              201308
+040029Cirurgia orofacial                                                                                  201308
+040030Sequenciais                                                                                         201308
+040032Transplantes de orgãos, tecidos e células                                                           201308
+040033Medicamentos para transplante                                                                       201308
+040035OPM em odontologia                                                                                  201308
+040036OPM em queimados                                                                                    201308
+040038OPM para transplantes                                                                               201308
+040039Incentivos ao pré-natal e nascimento                                                                201308
+040040Incentivo ao registro cívil de nascimento                                                           201308
+040041Central Nacional de Regulação de Alta Complexidade (CNRAC)                                          201308
+040042Reguladores de Atividade hormonal - Inibidores de prolactina                                        201308
+040043Política Nacional de Cirurgias Eletivas                                                             201308
+040044Redesignação e Acompanhamento                                                                       201308
+040045Projeto Olhar Brasil                                                                                201308
+040046Mamografia para Rastreamento                                                                        201308
+040047Projeto Olhar Brasil - Consulta                                                                     201308
+040048Projeto Olhar Brasil - Óculos                                                                       201308
+040049Implementar Cirg. CV Pediátrica                                                                     201308
+040050Cirurgias Eletivas - Componente I                                                                   201308
+040051Cirurgias Eletivas - Componente II                                                                  201308
+040052Cirurgias Eletivas - Componente III                                                                 201308
+040053Prótese Mamária - Exames                                                                            201308
+040054Prótese Mamária - Cirurgia                                                                          201308
+040055Transplante - Histocompatibilidade                                                                  201308
+040056Triagem Neonatal                                                                                    201308
+040057Controle de qualidade do exame citopatológico do colo de útero                                      201308
+040058Exames do Leite Materno                                                                             201308
