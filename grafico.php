@@ -392,6 +392,54 @@ function jsonColors(int $count, array $palette): string
         }
     });
 
+    const valueLabelsPlugin = {
+        id: 'valueLabels',
+        afterDatasetsDraw(chart) {
+            const {ctx} = chart;
+            const chartType = chart.config.type;
+            const isPie = chartType === 'pie' || chartType === 'doughnut';
+            const isBar = chartType === 'bar';
+
+            ctx.save();
+            ctx.font = "600 11px 'Segoe UI', system-ui, sans-serif";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                if (!meta || meta.hidden) {
+                    return;
+                }
+
+                meta.data.forEach((element, index) => {
+                    const rawValue = dataset.data[index];
+                    const value = Number(rawValue ?? 0);
+                    if (!Number.isFinite(value)) {
+                        return;
+                    }
+
+                    const position = element.tooltipPosition();
+                    let x = position.x;
+                    let y = position.y;
+
+                    if (isBar) {
+                        y -= 10;
+                    }
+
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = isPie ? 'rgba(0, 0, 0, 0.45)' : 'rgba(255, 255, 255, 0.95)';
+                    ctx.strokeText(String(value), x, y);
+                    ctx.fillStyle = isPie ? '#ffffff' : '#111827';
+                    ctx.fillText(String(value), x, y);
+                });
+            });
+
+            ctx.restore();
+        }
+    };
+
+    Chart.register(valueLabelsPlugin);
+
     <?php if ($total03 > 0): ?>
     // Sexo
     new Chart(document.getElementById('chartSexo'), {
